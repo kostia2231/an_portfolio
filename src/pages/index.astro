@@ -1,10 +1,70 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Nav from "../components/nav";
 import "./styles/global.css";
+const imageUrls = [
+    "",
+    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
+    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
+    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
+    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
+    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
+    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
+    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
+];
 ---
 
 <Layout>
-    <div class="text-lg">nastia web site</div>
-    <a href="/about">go to about</a>
+    <div class="h-screen w-screen fixed">
+        <div class="absolute w-full">
+            <div class="flex justify-between p-2">
+                <div>
+                    <p>Anastasia Potapova</p>
+                    <p class="cursor-pointer hover:underline decoration-2">
+                        E-m: anastasea@gmail.com
+                    </p>
+                    <p class="cursor-pointer hover:underline decoration-2">
+                        I: @anastasea
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <p
+                        class="cursor-pointer hover:underline decoration-2 h-fit"
+                    >
+                        Small
+                    </p>
+                    <p>|</p>
+                    <p
+                        class="cursor-pointer hover:underline decoration-2 h-fit"
+                    >
+                        Large
+                    </p>
+                </div>
+                <div>
+                    <p class="cursor-pointer hover:underline decoration-2">
+                        Shaffle
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div id="imageGrid" class="grid grid-cols-3 grid-flow-row-dense gap-1 p-2">
+        {
+            imageUrls.map((src) => (
+                <img src={src} class="w-full h-auto object-cover" />
+            ))
+        }
+    </div> -->
+
+    <script>
+        document.getElementById("shuffleBtn")?.addEventListener("click", () => {
+            const grid = document.getElementById("imageGrid");
+
+            if (grid) {
+                const images = Array.from(grid.children);
+                images.sort(() => Math.random() - 0.5);
+                grid.innerHTML = "";
+                images.forEach((img) => grid.appendChild(img));
+            }
+        });
+    </script>
 </Layout>
