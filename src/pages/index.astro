@@ -16,20 +16,20 @@ const imageUrls = [
 ---
 
 <Layout>
-    <div class="p-4" id="outer-wrapper">
+    <div id="outer-wrapper">
         <div id="inner-wrapper">
-            <header class="w-full h-[50vh]">
+            <header class="w-full h-[50vh] p-4">
                 <div class="flex justify-between">
-                    <div class="">
+                    <div class="text-xl">
                         <p>Anastasia Potapova</p>
-                        <p>Contact:</p>
+                        <!-- Contact -->
                         <p
-                            class="cursor-pointer hover:text-[30px] transition-all"
+                            class="cursor-pointer hover:underline decoration-dotted underline-offset-6"
                         >
                             anastasea@gmail.com
                         </p>
                         <p
-                            class="cursor-pointer hover:text-[30px] transition-all"
+                            class="cursor-pointer hover:underline decoration-dotted underline-offset-6"
                         >
                             @ana.sta.sea
                         </p>
@@ -44,18 +44,24 @@ const imageUrls = [
                     </p>
                 </div> -->
                     <div>
-                        <p
-                            class="cursor-pointer hover:text-[30px] transition-all"
-                        >
-                            <!-- Shaffle -->
-                        </p>
+                        <div class="flex text-black/10 gap-4">
+                            <!-- <p class="cursor-pointer h-fit">Index</p>
+                            <p>|</p>
+                            <p class="cursor-pointer h-fit">Small</p>
+                            <p>|</p>
+                            <p class="cursor-pointer h-fit">Large</p> -->
+                        </div>
                     </div>
                 </div>
             </header>
-            <main class="grid grid-cols-3 gap-4 h-full pb-4">
-                <div class="h-[500px] w-full bg-black"></div>
-                <div class="h-[500px] w-full bg-black"></div>
-                <div class="h-[500px] w-full bg-black"></div>
+            <main class="grid grid-cols-2 gap-1 h-full p-1">
+                <div class="h-[400px] w-full bg-black"></div>
+                <div class="h-[400px] w-full bg-black"></div>
+                <div class="h-[400px] w-full bg-black"></div>
+
+                <div class="h-[400px] w-full bg-black"></div>
+                <div class="h-[400px] w-full bg-black"></div>
+                <div class="h-[400px] w-full bg-black"></div>
             </main>
         </div>
     </div>
@@ -71,17 +77,16 @@ const imageUrls = [
     </div> -->
 
     <script>
-        const outer = document.getElementById("outer-wrapper");
-        const inner = document.getElementById("inner-wrapper");
+        const outer: HTMLElement | null =
+            document.getElementById("outer-wrapper");
+        const inner: HTMLElement | null =
+            document.getElementById("inner-wrapper");
+        const cloned_inner: Node | undefined = inner?.cloneNode(true);
 
-        const cloned_inner = inner?.cloneNode(true);
+        if (outer) outer.appendChild(cloned_inner as Node);
 
-        console.log(cloned_inner);
-
-        outer?.appendChild(cloned_inner as ChildNode);
-
-        window.addEventListener("scroll", () => {
-            let half_hight;
+        window.addEventListener("scroll", (): void => {
+            let half_hight: number | undefined;
             if (inner) half_hight = inner.clientHeight;
 
             if (half_hight && window.scrollY > half_hight) {
@@ -89,15 +94,15 @@ const imageUrls = [
             }
         });
 
-        document.getElementById("shuffleBtn")?.addEventListener("click", () => {
-            const grid = document.getElementById("imageGrid");
+        // document.getElementById("shuffleBtn")?.addEventListener("click", () => {
+        //     const grid = document.getElementById("imageGrid");
 
-            if (grid) {
-                const images = Array.from(grid.children);
-                images.sort(() => Math.random() - 0.5);
-                grid.innerHTML = "";
-                images.forEach((img) => grid.appendChild(img));
-            }
-        });
+        //     if (grid) {
+        //         const images = Array.from(grid.children);
+        //         images.sort(() => Math.random() - 0.5);
+        //         grid.innerHTML = "";
+        //         images.forEach((img) => grid.appendChild(img));
+        //     }
+        // });
     </script>
 </Layout>

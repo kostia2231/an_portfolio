@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: "overused-grotesk";
+    src: url("/src/assets/font/OverusedGrotesk-Roman.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: "overused-grotesk";
+    src: url("/src/assets/font/OverusedGrotesk-Book.woff2") format("woff2");
+    font-weight: 200;
+    font-style: normal;
+}
+
 *,
 *::before,
 *::after {
@@ -7,7 +20,17 @@
 }
 
 html * {
-    /* font-family: Helvetica, sans-serif; */
-    font-weight: 200;
+    /* font-family: "overused-grotesk", Helvetica, sans-serif; */
+    font-family: Helvetica, sans-serif;
+
+    font-weight: 500;
     text-rendering: optimizeLegibility;
+}
+
+html {
+    scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+    display: none;
 }
