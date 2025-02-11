@@ -1,10 +1,15 @@
 ---
 import "./styles/global.css";
-type Image = {
+import More from "../components/More";
+
+export type Image = {
     url: string;
 };
 const res = await fetch("http://localhost:4321/api/cloudinary-images");
-const imgs: Image[] = await res.json();
+const res_obj = await res.json();
+const imgs: Image[] = res_obj.resources;
+const next_cursor = res_obj.next_cursor;
+console.log(res_obj);
 ---
 
 <div class="text-[12px]">
@@ -33,6 +38,7 @@ const imgs: Image[] = await res.json();
                     );
                 })
             }
+            <More curr_cursor={next_cursor} client:visible />
         </div>
     </div>
 </div>

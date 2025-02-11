@@ -13,24 +13,36 @@ if (
   !process.env.CLOUDINARY_API_KEY ||
   !process.env.CLOUDINARY_API_SECRET
 ) {
-  throw new Error("missing Cloudinary configuration in environment variables");
+  throw new Error("missing cloudinary configuration in environment variables");
 }
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async (request) => {
   try {
+    const url = new URL(request.url);
+    const nextCursor = url.searchParams.get("next_cursor");
+    const maxResults = 3;
+
     const res = await c.api.resources({
       type: "upload",
-      max_results: 30,
+      max_results: maxResults,
+      next_cursor: nextCursor || undefined,
     });
 
-    return new Response(JSON.stringify(res.resources), {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
+    return new Response(
+      JSON.stringify({
+        resources: res.resources,
+        next_cursor: res.next_cursor,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Cache-Control": "no-store",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
       },
-    });
+    );
   } catch (err) {
     console.error("error while fetching images", err);
     return new Response(JSON.stringify({ error: "failed to fetch images" }), {
