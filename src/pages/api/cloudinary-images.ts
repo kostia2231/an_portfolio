@@ -20,7 +20,7 @@ export const GET: APIRoute = async (request) => {
   try {
     const url = new URL(request.url);
     const nextCursor = url.searchParams.get("next_cursor");
-    const maxResults = 3;
+    const maxResults = 4;
 
     const res = await c.api.resources({
       type: "upload",

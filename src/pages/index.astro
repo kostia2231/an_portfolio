@@ -1,108 +1,42 @@
 ---
-import Layout from "../layouts/Layout.astro";
 import "./styles/global.css";
-const imageUrls = [
-    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
-    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
-    "",
-    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
-    "",
-    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
-    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
-    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
-    "",
-    "https://res.cloudinary.com/dasghfwxk/image/upload/v1737975705/g0si97wlju8ect3amhvx.jpg",
-];
+import More from "../components/More";
+
+export type Image = {
+    url: string;
+};
+const res = await fetch("http://localhost:4321/api/cloudinary-images");
+const res_obj = await res.json();
+const imgs: Image[] = res_obj.resources;
+const next_cursor = res_obj.next_cursor;
 ---
 
-<Layout>
-    <div id="outer-wrapper">
-        <div id="inner-wrapper">
-            <header class="w-full h-[50vh] p-4">
-                <div class="flex justify-between">
-                    <div class="text-xl">
-                        <p>Anastasia Potapova</p>
-                        <!-- Contact -->
-                        <p
-                            class="cursor-pointer hover:underline decoration-dotted underline-offset-6"
-                        >
-                            anastasea@gmail.com
-                        </p>
-                        <p
-                            class="cursor-pointer hover:underline decoration-dotted underline-offset-6"
-                        >
-                            @ana.sta.sea
-                        </p>
-                    </div>
-                    <!-- <div class="flex gap-2">
-                    <p class="cursor-pointer h-fit hover:text-[30px]">Small</p>
-                    <p>|</p>
-                    <p
-                        class="cursor-pointer hover:underline decoration-2 h-fit underline-offset-3"
-                    >
-                        Large
-                    </p>
-                </div> -->
-                    <div>
-                        <div class="flex text-black/10 gap-4">
-                            <!-- <p class="cursor-pointer h-fit">Index</p>
-                            <p>|</p>
-                            <p class="cursor-pointer h-fit">Small</p>
-                            <p>|</p>
-                            <p class="cursor-pointer h-fit">Large</p> -->
-                        </div>
-                    </div>
-                </div>
-            </header>
-            <main class="grid grid-cols-2 gap-1 h-full p-1">
-                <div class="h-[400px] w-full bg-black"></div>
-                <div class="h-[400px] w-full bg-black"></div>
-                <div class="h-[400px] w-full bg-black"></div>
-
-                <div class="h-[400px] w-full bg-black"></div>
-                <div class="h-[400px] w-full bg-black"></div>
-                <div class="h-[400px] w-full bg-black"></div>
-            </main>
+<div class="text-[12px]">
+    <div class="fixed px-4 mt-[50vh] w-screen">
+        <div class="flex justify-between">
+            <div>
+                <p>Anastasia Potapova</p>
+            </div>
+            <div class="flex gap-4">
+                <p class="active:text-black/20 cursor-pointer">Instagram</p>
+                <p class="active:text-black/20 cursor-pointer">E-mail</p>
+            </div>
         </div>
     </div>
-    <!-- <div
-        id="imageGrid"
-        class="grid grid-cols-3 grid-flow-row-dense gap-1 p-4 pt-24"
-    >
-        {
-            imageUrls.map((src) => (
-                <img src={src} class="w-full h-auto object-cover" />
-            ))
-        }
-    </div> -->
-
-    <script>
-        const outer: HTMLElement | null =
-            document.getElementById("outer-wrapper");
-        const inner: HTMLElement | null =
-            document.getElementById("inner-wrapper");
-        const cloned_inner: Node | undefined = inner?.cloneNode(true);
-
-        if (outer) outer.appendChild(cloned_inner as Node);
-
-        window.addEventListener("scroll", (): void => {
-            let half_hight: number | undefined;
-            if (inner) half_hight = inner.clientHeight;
-
-            if (half_hight && window.scrollY > half_hight) {
-                window.scrollTo(0, window.scrollY - half_hight);
+    <div class="flex items-center justify-center">
+        <div class="flex flex-col gap-4 w-fit my-[50vh] items-center">
+            {
+                imgs.map((img) => {
+                    return (
+                        <img
+                            src={img.url}
+                            alt="img"
+                            class="h-[500px] object-cover"
+                        />
+                    );
+                })
             }
-        });
-
-        // document.getElementById("shuffleBtn")?.addEventListener("click", () => {
-        //     const grid = document.getElementById("imageGrid");
-
-        //     if (grid) {
-        //         const images = Array.from(grid.children);
-        //         images.sort(() => Math.random() - 0.5);
-        //         grid.innerHTML = "";
-        //         images.forEach((img) => grid.appendChild(img));
-        //     }
-        // });
-    </script>
-</Layout>
+            <More curr_cursor={next_cursor} client:visible />
+        </div>
+    </div>
+</div>

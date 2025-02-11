@@ -37,7 +37,7 @@ const More: FC<More> = ({ curr_cursor }) => {
     const handleScroll = () => {
       const isBottom =
         window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight;
+        document.documentElement.offsetHeight - 300;
       if (isBottom) getMore();
     };
 
@@ -45,7 +45,7 @@ const More: FC<More> = ({ curr_cursor }) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [cursor, hasNext]);
+  }, [cursor]);
 
   return (
     <>
@@ -54,11 +54,11 @@ const More: FC<More> = ({ curr_cursor }) => {
           key={img.asset_id}
           src={img.url}
           alt="img"
-          className="h-[600px] w-[500px] object-cover"
+          className="h-[500px] object-cover"
         />
       ))}
-      {loading && <div>loading</div>}
-      <div>asd</div>
+      {loading && <div>Loading</div>}
+      <div></div>
     </>
   );
 };
