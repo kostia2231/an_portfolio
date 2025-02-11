@@ -1,42 +1,38 @@
 ---
 import "./styles/global.css";
+type Image = {
+    url: string;
+};
+const res = await fetch("http://localhost:4321/api/cloudinary-images");
+const imgs: Image[] = await res.json();
 ---
 
-<div>
-    <div class="fixed px-4 text-[12px] mt-[50vh] w-screen">
+<div class="text-[12px]">
+    <div class="fixed px-4 mt-[50vh] w-screen">
         <div class="flex justify-between">
             <div>
                 <p>Anastasia Potapova</p>
-                <!-- <p class="hover:text-black/50 cursor-pointer">
-                    info@anastasea.com
-                </p>
-                <p class="hover:text-black/50 cursor-pointer">@ana.sta.sea</p> -->
             </div>
             <div class="flex gap-4">
-                <p
-                    class="hover:text-black/50 active:text-black/20 cursor-pointer"
-                >
-                    Instagram
-                </p>
-                <p
-                    class="hover:text-black/50 active:text-black/20 cursor-pointer"
-                >
-                    E-mail
-                </p>
-                <p
-                    class="hover:text-black/50 active:text-black/20 cursor-pointer"
-                >
-                    Index
-                </p>
+                <p class="active:text-black/20 cursor-pointer">Instagram</p>
+                <p class="active:text-black/20 cursor-pointer">E-mail</p>
+                <p class="active:text-black/20 cursor-pointer">Index</p>
             </div>
         </div>
     </div>
     <div class="flex items-center justify-center">
         <div class="flex flex-col gap-4 w-fit my-[50vh] items-center">
-            <div class="h-[600px] w-[500px] bg-black"></div>
-            <div class="h-[600px] w-[500px] bg-black"></div>
-            <div class="h-[600px] w-[500px] bg-black"></div>
-            <div class="h-[600px] w-[500px] bg-black"></div>
+            {
+                imgs.map((img) => {
+                    return (
+                        <img
+                            src={img.url}
+                            alt="img"
+                            class="h-[600px] w-[500px] object-cover"
+                        />
+                    );
+                })
+            }
         </div>
     </div>
 </div>
