@@ -9,6 +9,7 @@ type Image = {
 const res = await fetch("http://localhost:4321/api/cloudinary-images");
 const res_obj = await res.json();
 const imgs: Image[] = res_obj.resources;
+const first_img: string = imgs[0].url;
 // const next_cursor = res_obj.next_cursor;
 ---
 
@@ -26,22 +27,32 @@ const imgs: Image[] = res_obj.resources;
             </div>
         </div>
     </div>
-    <div class="flex items-center justify-center">
+    <div class="flex flex-col items-center justify-center">
         <div
             id="img_wrapper"
-            class="flex flex-col gap-3 w-fit my-[50vh] items-center"
+            class="flex flex-col gap-3 w-fit my-4 items-center"
         >
+            <img
+                src={first_img}
+                alt="first_img"
+                class="h-[80vh] object-cover transition-all duration-600 ease-in-out handle_blur"
+            />
             {
-                imgs.map((img) => {
+                imgs.slice(1).map((img) => {
                     return (
                         <img
                             src={img.url}
                             alt="img"
-                            class="h-[80vh] object-cover transition-all duration-600 ease-in-out handle_blur"
+                            class="h-[80vh] object-cover transition-all duration-600 ease-in-out handle_blur blur-xs opacity-90"
                         />
                     );
                 })
             }
+        </div>
+        <div
+            class="mb-4 text-white/10 ml-auto mr-4 mt-[45vh] mix-blend-difference"
+        >
+            All Rights Reserved. 2025
         </div>
     </div>
 </div>
