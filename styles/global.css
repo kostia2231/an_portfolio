@@ -1,5 +1,4 @@
 @import "tailwindcss";
-/* @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"); */
 
 *,
 *::before,
@@ -8,9 +7,7 @@
 }
 
 html * {
-    /* font-family: "overused-grotesk", Helvetica, sans-serif; */
     font-family: Helvetica, sans-serif;
-    /* font-family: "EB Garamond", serif; */
     font-weight: 500;
     text-rendering: optimizeLegibility;
 }
@@ -24,40 +21,5 @@ html::-webkit-scrollbar {
 }
 
 .handle_blur {
-    will-change: transform, filter;
+    will-change: filter;
 }
-
-/* animation */
-
-.image_animate {
-    will-change: transform, filter;
-    animation: image 3s ease-out;
-}
-
-@keyframes image {
-    0% {
-        transform: translate3d(0, 0, 0);
-    }
-    100% {
-        transform: translate3d(0, 1100px, 0);
-    }
-}
-
-/* @keyframes image {
-    0% {
-        transform: translate3d(0, 0, 0);
-    }
-    10% {
-        transform: translate3d(0, 1100px, 0);
-    }
-    90% {
-        transform: translate3d(0, 1100px, 0);
-        filter: blur(0);
-        opacity: 1;
-    }
-    100% {
-        filter: blur(10px);
-        opacity: 0;
-        transform: translate3d(0, 2000px, 0);
-    }
-} */

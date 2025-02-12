@@ -8,6 +8,8 @@ import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://kostia2231.github.io",
+  base: "astro",
   devToolbar: {
     enabled: false,
   },
