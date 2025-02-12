@@ -15,7 +15,7 @@ const first_img: string = imgs[0].url;
 
 <div class="text-[12px] bg-white">
     <div
-        class="fixed px-4 mt-[49vh] w-screen text-white/65 mix-blend-difference h-2 z-10"
+        class="fixed px-4 mt-[49vh] w-screen text-white/65 mix-blend-difference h-2 z-30"
     >
         <div class="flex justify-between">
             <div>
@@ -30,20 +30,33 @@ const first_img: string = imgs[0].url;
     <div class="flex flex-col items-center justify-center">
         <div
             id="img_wrapper"
-            class="flex flex-col gap-3 w-fit my-4 items-center"
+            class="flex flex-col gap-4 w-fit my-4 items-center"
         >
+            {
+                imgs.map((img) => {
+                    return (
+                        <img
+                            src={img.url}
+                            class={`absolute h-[30vh] object-contain image_animate ease-in-out top-[-1000px] will-change-transform z-40`}
+                        />
+                    );
+                })
+            }
+
             <img
+                id="img_static"
                 src={first_img}
                 alt="first_img"
-                class="h-[80vh] object-cover transition-all duration-600 ease-in-out handle_blur"
+                class="hidden h-[80vh] object-cover transition-all duration-600 ease-in-out handle_blur z-10"
             />
             {
                 imgs.slice(1).map((img) => {
                     return (
                         <img
+                            id="img_static"
                             src={img.url}
                             alt="img"
-                            class="h-[80vh] object-cover transition-all duration-600 ease-in-out handle_blur blur-xs opacity-90"
+                            class="hidden h-[80vh] object-cover transition-all duration-600 ease-in-out handle_blur blur-xs opacity-90"
                         />
                     );
                 })
@@ -52,7 +65,7 @@ const first_img: string = imgs[0].url;
         <div
             class="mb-4 text-white/10 ml-auto mr-4 mt-[45vh] mix-blend-difference"
         >
-            All Rights Reserved. 2025
+            <!-- All Rights Reserved. 2025 -->
         </div>
     </div>
 </div>
@@ -63,9 +76,18 @@ const first_img: string = imgs[0].url;
             history.scrollRestoration = "manual";
         }
 
+        const imgs_animate = document.querySelectorAll(".image_animate");
         const img_wrapper = document.getElementById("img_wrapper");
-        const imgs = img_wrapper?.querySelectorAll("img");
+        const imgs = img_wrapper?.querySelectorAll("#img_static");
         const text = document.querySelector(".fixed");
+
+        imgs_animate.forEach((img, index) => {
+            const img_element = img as HTMLElement;
+            const rnd_num = Math.floor(Math.random() * 13) - 6;
+
+            img_element.style.animationDelay = `${index * 200}ms`;
+            img_element.style.rotate = `z ${rnd_num}deg`;
+        });
 
         window.addEventListener("scroll", () => {
             imgs?.forEach((img) => {
@@ -78,9 +100,7 @@ const first_img: string = imgs[0].url;
                     img_rect.bottom >= text_rect?.top
                 ) {
                     img.classList.remove("blur-xs");
-                    img.classList.remove("opacity-90");
                 } else {
-                    img.classList.add("opacity-90");
                     img.classList.add("blur-xs");
                 }
             });
