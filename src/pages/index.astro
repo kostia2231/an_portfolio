@@ -14,7 +14,7 @@ const imgs: Image[] = res_obj.resources;
 
 <div class="text-[12px] bg-white">
     <div
-        class="fixed px-4 mt-[49vh] w-screen text-white mix-blend-difference h-2"
+        class="fixed px-4 mt-[49vh] w-screen text-white/65 mix-blend-difference h-2 z-10"
     >
         <div class="flex justify-between">
             <div>
@@ -29,7 +29,7 @@ const imgs: Image[] = res_obj.resources;
     <div class="flex items-center justify-center">
         <div
             id="img_wrapper"
-            class="hidden flex-col gap-3 w-fit my-[50vh] items-center"
+            class="flex flex-col gap-3 w-fit my-[50vh] items-center"
         >
             {
                 imgs.map((img) => {
@@ -37,7 +37,7 @@ const imgs: Image[] = res_obj.resources;
                         <img
                             src={img.url}
                             alt="img"
-                            class="h-[80vh] object-cover transition-all filter duration-600 ease-in-out"
+                            class="h-[80vh] object-cover transition-all duration-600 ease-in-out handle_blur"
                         />
                     );
                 })
@@ -55,17 +55,6 @@ const imgs: Image[] = res_obj.resources;
         const img_wrapper = document.getElementById("img_wrapper");
         const imgs = img_wrapper?.querySelectorAll("img");
         const text = document.querySelector(".fixed");
-        let loaded_count = 0;
-
-        imgs?.forEach((img) => {
-            img.addEventListener("load", () => {
-                loaded_count++;
-                if (loaded_count === imgs.length) {
-                    img_wrapper?.classList.remove("hidden");
-                    img_wrapper?.classList.add("flex");
-                }
-            });
-        });
 
         window.addEventListener("scroll", () => {
             imgs?.forEach((img) => {
@@ -77,11 +66,11 @@ const imgs: Image[] = res_obj.resources;
                     img_rect.top <= text_rect?.bottom &&
                     img_rect.bottom >= text_rect?.top
                 ) {
-                    img.classList.remove("blur-[6px]");
+                    img.classList.remove("blur-xs");
                     img.classList.remove("opacity-90");
                 } else {
                     img.classList.add("opacity-90");
-                    img.classList.add("blur-[6px]");
+                    img.classList.add("blur-xs");
                 }
             });
         });
