@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import type { FC } from "react";
-type More = {
+
+type MoreProps = {
   curr_cursor: string;
 };
-export type Image = {
+type Image = {
   url: string;
   asset_id: string;
 };
 
-const More: FC<More> = ({ curr_cursor }) => {
+const More: FC<MoreProps> = ({ curr_cursor }) => {
   const [images, setImages] = useState<Image[] | []>([]);
   const [cursor, setCursor] = useState<string | null>(curr_cursor);
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,8 +32,6 @@ const More: FC<More> = ({ curr_cursor }) => {
       setCursor(new_cursor);
       if (!new_cursor) setHasNext(false);
       setLoading(false);
-
-      console.log("s");
     } catch (err) {
       console.error("error while fetching images", (err as Error).message);
     }
@@ -54,7 +53,7 @@ const More: FC<More> = ({ curr_cursor }) => {
           getMore();
         }
       },
-      { root: null, rootMargin: "0px", threshold: 1.0 },
+      { root: null, rootMargin: "-100px", threshold: 0 },
     );
 
     observer.observe(loadMoreRef.current);
@@ -67,17 +66,39 @@ const More: FC<More> = ({ curr_cursor }) => {
   return (
     <>
       {images.map((img) => (
-        <img
-          loading="lazy"
+        <BlurImage
           key={img.asset_id}
           src={img.url}
           alt={`img ${img.asset_id}`}
-          className="h-[500px] object-cover"
         />
       ))}
-      {loading && <div>Loading</div>}
       <div ref={loadMoreRef}></div>
     </>
+  );
+};
+
+const BlurImage: FC<{ src: string; alt: string }> = ({ src, alt }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = src;
+
+    if (img.complete) {
+      setLoaded(true);
+    }
+
+    img.onload = () => setLoaded(true);
+  }, [src]);
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={`h-[80vh] object-cover transition-all duration-700 ease-in-out ${
+        loaded ? "opacity-100 blur-0" : "opacity-0 blur-md"
+      }`}
+    />
   );
 };
 

@@ -2,18 +2,21 @@
 import "./styles/global.css";
 import More from "../components/More";
 
-export type Image = {
+type Image = {
     url: string;
 };
+
 const res = await fetch("http://localhost:4321/api/cloudinary-images");
 const res_obj = await res.json();
 const imgs: Image[] = res_obj.resources;
-const next_cursor = res_obj.next_cursor;
+// const next_cursor = res_obj.next_cursor;
 ---
 
-<div class="text-[12px]">
-    <div class="fixed px-4 mt-[50vh] w-screen">
-        <div class="flex justify-between text-black">
+<div class="text-[12px] bg-white">
+    <div
+        class="fixed px-4 mt-[49vh] w-screen text-white mix-blend-difference h-2"
+    >
+        <div class="flex justify-between">
             <div>
                 <p>Anastasia Potapova</p>
             </div>
@@ -24,19 +27,63 @@ const next_cursor = res_obj.next_cursor;
         </div>
     </div>
     <div class="flex items-center justify-center">
-        <div class="flex flex-col gap-4 w-fit my-[50vh] items-center">
+        <div
+            id="img_wrapper"
+            class="hidden flex-col gap-3 w-fit my-[50vh] items-center"
+        >
             {
                 imgs.map((img) => {
                     return (
                         <img
                             src={img.url}
                             alt="img"
-                            class="h-[500px] object-cover"
+                            class="h-[80vh] object-cover transition-all filter duration-600 ease-in-out"
                         />
                     );
                 })
             }
-            <More curr_cursor={next_cursor} client:visible />
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        if ("scrollRestoration" in history) {
+            history.scrollRestoration = "manual";
+        }
+
+        const img_wrapper = document.getElementById("img_wrapper");
+        const imgs = img_wrapper?.querySelectorAll("img");
+        const text = document.querySelector(".fixed");
+        let loaded_count = 0;
+
+        imgs?.forEach((img) => {
+            img.addEventListener("load", () => {
+                loaded_count++;
+                if (loaded_count === imgs.length) {
+                    img_wrapper?.classList.remove("hidden");
+                    img_wrapper?.classList.add("flex");
+                }
+            });
+        });
+
+        window.addEventListener("scroll", () => {
+            imgs?.forEach((img) => {
+                const img_rect = img.getBoundingClientRect();
+                const text_rect = text?.getBoundingClientRect();
+
+                if (
+                    text_rect &&
+                    img_rect.top <= text_rect?.bottom &&
+                    img_rect.bottom >= text_rect?.top
+                ) {
+                    img.classList.remove("blur-[6px]");
+                    img.classList.remove("opacity-90");
+                } else {
+                    img.classList.add("opacity-90");
+                    img.classList.add("blur-[6px]");
+                }
+            });
+        });
+    });
+</script>
