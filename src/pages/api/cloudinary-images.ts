@@ -19,6 +19,7 @@ if (
 export const GET: APIRoute = async (request) => {
   try {
     const url = new URL(request.url);
+    console.log(url);
     const nextCursor = url.searchParams.get("next_cursor");
     const maxResults = 25;
 

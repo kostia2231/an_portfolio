@@ -5,7 +5,9 @@ type Image = {
     url: string;
 };
 
-const res = await fetch("http://localhost:4321/api/cloudinary-images");
+const res = await fetch(
+    "http://subtle-palmier-ae368e.netlify.app/api/cloudinary-images",
+);
 const res_obj = await res.json();
 const imgs: Image[] = res_obj.resources;
 const first_img: string = imgs[0].url;
