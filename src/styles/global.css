@@ -13,5 +13,5 @@ html * {
 }
 
 .handle_blur {
-    will-change: filter;
+    will-change: rotate, filter;
 }

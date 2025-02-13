@@ -15,7 +15,7 @@ const first_img: string = imgs[0].url;
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Anastasia</title>
 </head>
 
@@ -34,11 +34,11 @@ const first_img: string = imgs[0].url;
         </div>
     </div>
     <div
-        class="flex flex-col items-center justify-center max-[500px]:w-[100vw]"
+        class="flex flex-col items-center justify-center max-[500px]:w-[100vw] handle_blur"
     >
         <div
             id="img_wrapper"
-            class="flex flex-col gap-6 w-fit my-4 items-center max-[500px]:mt-[54vh] overflow-hidden"
+            class="flex flex-col gap-6 w-fit my-4 items-center max-[500px]:mt-[54vh] handle_blur overflow-hidden"
         >
             <img
                 id="img_static"
@@ -88,7 +88,7 @@ const first_img: string = imgs[0].url;
                     img_rect.bottom >= text_rect?.top
                 ) {
                     img.classList.remove("blur-xs");
-                    img.classList.replace("rotate-2", "rotate-0");
+                    img.classList.remove("rotate-2");
                 } else {
                     img.classList.add("blur-xs");
                     img.classList.add("rotate-2");
