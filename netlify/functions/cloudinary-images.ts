@@ -1,4 +1,3 @@
-import type { APIRoute } from "astro";
 import { v2 as c } from "cloudinary";
 import "dotenv/config";
 
@@ -13,13 +12,14 @@ if (
   !process.env.CLOUDINARY_API_KEY ||
   !process.env.CLOUDINARY_API_SECRET
 ) {
-  throw new Error("missing cloudinary configuration in environment variables");
+  throw new Error("Missing Cloudinary configuration in environment variables");
 }
 
-export const GET: APIRoute = async (request) => {
+export async function handler(event: any) {
   try {
-    const url = new URL(request.url);
-    console.log(url);
+    const url = new URL(event.rawUrl);
+    console.log("Request URL:", event.rawUrl);
+
     const nextCursor = url.searchParams.get("next_cursor");
     const maxResults = 25;
 
@@ -29,26 +29,26 @@ export const GET: APIRoute = async (request) => {
       next_cursor: nextCursor || null,
     });
 
-    return new Response(
-      JSON.stringify({
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
         resources: res.resources,
         next_cursor: res.next_cursor,
       }),
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Cache-Control": "no-store",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "no-store",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
       },
-    );
+    };
   } catch (err) {
-    console.error("error while fetching images", err);
-    return new Response(JSON.stringify({ error: "failed to fetch images" }), {
-      status: 500,
+    console.error("Error fetching images:", err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Failed to fetch images" }),
       headers: { "Content-Type": "application/json" },
-    });
+    };
   }
-};
+}

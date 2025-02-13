@@ -9,11 +9,10 @@ const res = await fetch(
     "http://subtle-palmier-ae368e.netlify.app/.netlify/functions/cloudinary-images",
 );
 
-console.log(res, "RESPONCE");
 const res_obj = await res.json();
-console.log(res_obj, "RESPONCEOBJ");
 
 const imgs: Image[] = res_obj.resources;
+
 const first_img: string = imgs[0].url;
 ---
 
