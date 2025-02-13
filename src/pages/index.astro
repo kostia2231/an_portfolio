@@ -38,7 +38,7 @@ const first_img: string = imgs[1].url;
     >
         <div
             id="img_wrapper"
-            class="flex flex-col gap-6 w-fit my-4 items-center max-[500px]:mt-0 overflow-hidden"
+            class="flex flex-col w-fit my-4 items-center max-[500px]:mt-0 overflow-hidden"
         >
             <img
                 id="img_static"
@@ -53,7 +53,7 @@ const first_img: string = imgs[1].url;
                             id="img_static"
                             src={img.url}
                             alt="img"
-                            class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-in-out handle_blur blur-xs opacity-90 rotate-1"
+                            class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-out handle_blur blur-xs opacity-90 scale-95"
                         />
                     );
                 })
@@ -86,10 +86,10 @@ const first_img: string = imgs[1].url;
                     img_rect.bottom >= text_rect?.top
                 ) {
                     img.classList.remove("blur-xs");
-                    img.classList.remove("rotate-1");
+                    img.classList.remove("scale-95");
                 } else {
                     img.classList.add("blur-xs");
-                    img.classList.add("rotate-1");
+                    img.classList.add("scale-95");
                 }
             });
         });
