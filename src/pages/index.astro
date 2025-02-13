@@ -5,7 +5,9 @@ type Image = {
     url: string;
 };
 
-const res = await fetch("/.netlify/functions/cloudinary-images");
+const res = await fetch(
+    "http://subtle-palmier-ae368e.netlify.app/.netlify/functions/cloudinary-images",
+);
 
 const res_obj = await res.json();
 
