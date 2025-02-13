@@ -12,14 +12,6 @@ html * {
     text-rendering: optimizeLegibility;
 }
 
-html {
-    scrollbar-width: none;
-}
-
-html::-webkit-scrollbar {
-    display: none;
-}
-
 .handle_blur {
     will-change: filter;
 }
