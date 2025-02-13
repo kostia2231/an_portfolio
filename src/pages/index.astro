@@ -38,7 +38,7 @@ const first_img: string = imgs[0].url;
                 id="img_static"
                 src={first_img}
                 alt="first_img"
-                class="h-[80vh] max-[500px]:h-auto max-w-full object-cover transition-all duration-600 ease-in-out handle_blur z-10"
+                class="h-[80vh] max-[500px]:h-auto w-full object-cover transition-all duration-600 ease-in-out handle_blur z-10"
             />
             {
                 imgs.slice(1).map((img) => {
@@ -47,7 +47,7 @@ const first_img: string = imgs[0].url;
                             id="img_static"
                             src={img.url}
                             alt="img"
-                            class="h-[80vh] max-[500px]:h-auto max-w-full object-cover transition-all duration-600 ease-in-out handle_blur blur-xs opacity-90 rotate-2"
+                            class="h-[80vh] max-[500px]:h-auto w-full object-cover transition-all duration-600 ease-in-out handle_blur blur-xs opacity-90 rotate-2"
                         />
                     );
                 })
