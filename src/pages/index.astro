@@ -8,7 +8,6 @@ type Image = {
 const res = await fetch(
     "https://subtle-palmier-ae368e.netlify.app/api/data.json",
 );
-
 const res_obj = await res.json();
 const imgs: Image[] = res_obj.resources;
 const first_img: string = imgs[0].url;
@@ -28,7 +27,9 @@ const first_img: string = imgs[0].url;
             </div>
         </div>
     </div>
-    <div class="flex flex-col items-center justify-center">
+    <div
+        class="flex flex-col items-center justify-center max-[500px]:w-[100vw]"
+    >
         <div
             id="img_wrapper"
             class="flex flex-col gap-6 w-fit my-4 items-center max-[500px]:mt-[54vh]"
