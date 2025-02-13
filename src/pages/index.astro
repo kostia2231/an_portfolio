@@ -7,14 +7,11 @@ type Image = {
 };
 
 const res = await fetch(
-    "https://subtle-palmier-ae368e.netlify.app/.netlify/functions/c-img",
+    "https://subtle-palmier-ae368e.netlify.app/api/data.json",
 );
 
 const res_obj = await res.json();
-console.warn(res_obj);
-
 const imgs: Image[] = res_obj.resources;
-
 const first_img: string = imgs[0].url;
 ---
 
