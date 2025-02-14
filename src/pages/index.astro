@@ -56,7 +56,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     return (
                         <img
                             loading="eager"
-                            decoding="sync"
+                            decoding="async"
                             id="img_static"
                             src={url}
                             alt="img"
@@ -80,17 +80,15 @@ const img_urls = imgs.map((img) => img.transformed_url);
         const imgs = img_wrapper?.querySelectorAll<HTMLImageElement>("img");
         const text = document.querySelector(".fixed");
 
-        imgs?.forEach((img, index) => {
-            setTimeout(() => {
-                img.decode()
-                    .then(() => {
-                        console.log(`Image ${img.src} decoded successfully!`);
-                        img.setAttribute("decoded", "true");
-                    })
-                    .catch((err) => {
-                        console.error(`Error decoding image ${img.src}:`, err);
-                    });
-            }, index * 200);
+        imgs?.forEach((img) => {
+            img.decode()
+                .then(() => {
+                    console.log(`Image ${img.src} decoded successfully!`);
+                    img.setAttribute("decoded", "true");
+                })
+                .catch((err) => {
+                    console.error(`Error decoding image ${img.src}:`, err);
+                });
         });
 
         window.addEventListener("scroll", () => {

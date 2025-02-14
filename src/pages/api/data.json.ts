@@ -28,9 +28,9 @@ export const GET: APIRoute = async (request) => {
       next_cursor: nextCursor || null,
     });
 
-    const resources = res.resources.map((image: { url: string }) => ({
+    const resources = res.resources.map((image: { secure_url: string }) => ({
       ...image,
-      transformed_url: image.url.replace(
+      transformed_url: image.secure_url.replace(
         "/upload/",
         "/upload/w_1000/q_auto/f_auto/",
       ),
