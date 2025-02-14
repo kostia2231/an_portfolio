@@ -36,8 +36,6 @@ export const GET: APIRoute = async (request) => {
       ),
     }));
 
-    console.log(resources);
-
     return new Response(
       JSON.stringify({
         resources,

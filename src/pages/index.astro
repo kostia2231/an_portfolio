@@ -49,7 +49,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 id="img_static"
                 src={first_img}
                 alt="first_img"
-                class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-in-out handle_blur z-10"
+                class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-in-out handle_blur z-10 handle_animation"
             />
             {
                 img_urls.slice(2).map((url) => {
@@ -60,7 +60,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                             id="img_static"
                             src={url}
                             alt="img"
-                            class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-out handle_blur blur-xs"
+                            class="hidden h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-in-out handle_blur blur-xs "
                         />
                     );
                 })
@@ -84,6 +84,9 @@ const img_urls = imgs.map((img) => img.transformed_url);
             img.decode()
                 .then(() => {
                     console.log(`Image ${img.src} decoded successfully!`);
+                    img.classList.add("handle_animation");
+                    img.classList.remove("hidden");
+
                     img.setAttribute("decoded", "true");
                 })
                 .catch((err) => {
@@ -96,6 +99,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 if (img instanceof HTMLImageElement) {
                     const img_rect = img.getBoundingClientRect();
                     const text_rect = text?.getBoundingClientRect();
+
                     if (
                         text_rect &&
                         img_rect.top <= text_rect?.bottom &&
