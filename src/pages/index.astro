@@ -3,17 +3,18 @@ import "../styles/global.css";
 
 type Image = {
     url: string;
+    transformed_url: string;
 };
 
 const res = await fetch(
     "https://subtle-palmier-ae368e.netlify.app/api/data.json",
+    // "http://localhost:8888/api/data.json",
 );
 const res_obj = await res.json();
 const imgs: Image[] = res_obj.resources;
 
-console.log(res_obj);
-const first_img: string = imgs[1].url;
-const img_urls = imgs.map((img) => img.url.replace(/\.jpeg$/, ".webp"));
+const first_img: string = imgs[1].transformed_url;
+const img_urls = imgs.map((img) => img.transformed_url);
 ---
 
 <head>
@@ -75,6 +76,7 @@ const img_urls = imgs.map((img) => img.url.replace(/\.jpeg$/, ".webp"));
         }
 
         const img_wrapper = document.getElementById("img_wrapper");
+
         const imgs = img_wrapper?.querySelectorAll<HTMLImageElement>("img");
         const text = document.querySelector(".fixed");
 

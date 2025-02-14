@@ -28,9 +28,19 @@ export const GET: APIRoute = async (request) => {
       next_cursor: nextCursor || null,
     });
 
+    const resources = res.resources.map((image: { url: string }) => ({
+      ...image,
+      transformed_url: image.url.replace(
+        "/upload/",
+        "/upload/w_1000/q_auto/f_auto/",
+      ),
+    }));
+
+    console.log(resources);
+
     return new Response(
       JSON.stringify({
-        resources: res.resources,
+        resources,
         next_cursor: res.next_cursor,
       }),
 
