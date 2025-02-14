@@ -46,7 +46,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             class="flex flex-col gap-4 w-fit my-4 items-center max-[500px]:my-0 overflow-hidden"
         >
             <img
-                id="img_static"
+                id="img_first"
                 src={first_img}
                 alt="first_img"
                 class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-in-out handle_blur z-10 handle_animation"
@@ -77,14 +77,18 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
         const img_wrapper = document.getElementById("img_wrapper");
 
-        const imgs = img_wrapper?.querySelectorAll<HTMLImageElement>("img");
+        const imgs =
+            img_wrapper?.querySelectorAll<HTMLImageElement>(
+                "img[id=img_static]",
+            );
         const text = document.querySelector(".fixed");
 
+        // setTimeout(() => {
         imgs?.forEach((img) => {
             img.decode()
                 .then(() => {
                     console.log(`Image ${img.src} decoded successfully!`);
-                    img.classList.add("handle_animation");
+                    img.classList.add("handle_animation_slower");
                     img.classList.remove("hidden");
 
                     img.setAttribute("decoded", "true");
@@ -93,6 +97,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     console.error(`Error decoding image ${img.src}:`, err);
                 });
         });
+        // }, 2000);
 
         window.addEventListener("scroll", () => {
             imgs?.forEach((img) => {
