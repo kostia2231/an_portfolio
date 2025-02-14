@@ -43,7 +43,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
     >
         <div
             id="img_wrapper"
-            class="flex flex-col gap-4 w-fit my-4 items-center max-[500px]:my-0 overflow-hidden"
+            class="flex flex-col gap-4 w-fit my-4 items-center max-[500px]:my-0 max-[500px]:gap-8 overflow-hidden"
         >
             <img
                 id="img_first"
@@ -60,7 +60,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                             id="img_static"
                             src={url}
                             alt="img"
-                            class="hidden h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-in-out handle_blur blur-xs "
+                            class="hidden h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-in-out handle_blur blur-xs"
                         />
                     );
                 })
@@ -76,18 +76,20 @@ const img_urls = imgs.map((img) => img.transformed_url);
         }
 
         const img_wrapper = document.getElementById("img_wrapper");
-
         const imgs =
             img_wrapper?.querySelectorAll<HTMLImageElement>(
                 "img[id=img_static]",
             );
+        const img_first =
+            img_wrapper?.querySelectorAll<HTMLImageElement>(
+                "img[id=img_first]",
+            );
         const text = document.querySelector(".fixed");
 
-        // setTimeout(() => {
         imgs?.forEach((img) => {
             img.decode()
                 .then(() => {
-                    console.log(`Image ${img.src} decoded successfully!`);
+                    // console.log(`Image ${img.src} decoded successfully!`);
                     img.classList.add("handle_animation_slower");
                     img.classList.remove("hidden");
 
@@ -97,7 +99,23 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     console.error(`Error decoding image ${img.src}:`, err);
                 });
         });
-        // }, 2000);
+
+        window.addEventListener("scroll", () => {
+            if (img_first) {
+                const first_img = img_first[0];
+                const img_rect = first_img.getBoundingClientRect();
+                const text_rect = text?.getBoundingClientRect();
+                if (
+                    text_rect &&
+                    img_rect.top <= text_rect?.bottom &&
+                    img_rect.bottom >= text_rect?.top
+                ) {
+                    first_img.classList.remove("blur-xs");
+                } else {
+                    first_img.classList.add("blur-xs");
+                }
+            }
+        });
 
         window.addEventListener("scroll", () => {
             imgs?.forEach((img) => {
