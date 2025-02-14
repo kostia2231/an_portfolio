@@ -85,21 +85,21 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 "img[id=img_first]",
             );
         const text = document.querySelector(".fixed");
-        // setTimeout(() => {
-        imgs?.forEach((img) => {
-            img.decode()
-                .then(() => {
-                    // console.log(`Image ${img.src} decoded successfully!`);
-                    img.classList.add("handle_animation_slower");
-                    img.classList.remove("hidden");
+        setTimeout(() => {
+            imgs?.forEach((img) => {
+                img.decode()
+                    .then(() => {
+                        console.log(`Image ${img.src} decoded successfully!`);
+                        img.classList.add("handle_animation_slower");
+                        img.classList.remove("hidden");
 
-                    img.setAttribute("decoded", "true");
-                })
-                .catch((err) => {
-                    console.error(`Error decoding image ${img.src}:`, err);
-                });
-        });
-        // }, 2000);
+                        img.setAttribute("decoded", "true");
+                    })
+                    .catch((err) => {
+                        console.error(`Error decoding image ${img.src}:`, err);
+                    });
+            });
+        }, 50);
 
         window.addEventListener("scroll", () => {
             if (img_first) {
