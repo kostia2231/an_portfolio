@@ -32,7 +32,7 @@ export const GET: APIRoute = async (request) => {
       ...image,
       transformed_url: image.secure_url.replace(
         "/upload/",
-        "/upload/w_1000/q_auto/f_auto/",
+        "/upload/w_1000/q_auto/f_avif/",
       ),
     }));
 

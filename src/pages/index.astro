@@ -85,7 +85,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 "img[id=img_first]",
             );
         const text = document.querySelector(".fixed");
-
+        // setTimeout(() => {
         imgs?.forEach((img) => {
             img.decode()
                 .then(() => {
@@ -99,6 +99,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     console.error(`Error decoding image ${img.src}:`, err);
                 });
         });
+        // }, 2000);
 
         window.addEventListener("scroll", () => {
             if (img_first) {
