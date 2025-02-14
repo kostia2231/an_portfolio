@@ -89,6 +89,12 @@ const img_urls = imgs.map((img) => img.url.replace(/\.jpeg$/, ".webp"));
                     await i.decode();
                     const url = new URL(i.src);
                     console.log("Decoded URL:", url);
+                    img.getAttributeNames().forEach((attrName) => {
+                        const attrValue = img.getAttribute(attrName);
+                        if (attrValue !== null) {
+                            i.setAttribute(attrName, attrValue);
+                        }
+                    });
 
                     img.replaceWith(i);
                     i.setAttribute("data-loaded", "high-decoded");
