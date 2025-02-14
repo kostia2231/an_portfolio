@@ -10,13 +10,17 @@ const res = await fetch(
 );
 const res_obj = await res.json();
 const imgs: Image[] = res_obj.resources;
+
+console.log(res_obj);
 const first_img: string = imgs[1].url;
+const img_urls = imgs.map((img) => img.url.replace(/\.jpeg$/, ".webp"));
 ---
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Anastasia</title>
+    {img_urls.map((url) => <link rel="preload" as="image" href={url} />)}
 </head>
 
 <div class="text-[12px] bg-white">
@@ -38,7 +42,7 @@ const first_img: string = imgs[1].url;
     >
         <div
             id="img_wrapper"
-            class="flex flex-col w-fit my-4 items-center max-[500px]:mt-0 overflow-hidden"
+            class="flex flex-col gap-4 w-fit my-4 items-center max-[500px]:mt-0 overflow-hidden"
         >
             <img
                 id="img_static"
@@ -47,49 +51,68 @@ const first_img: string = imgs[1].url;
                 class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-in-out handle_blur z-10"
             />
             {
-                imgs.slice(2).map((img) => {
+                img_urls.slice(2).map((url) => {
                     return (
                         <img
+                            loading="lazy"
+                            decoding="sync"
+                            fetchpriority="high"
                             id="img_static"
-                            src={img.url}
+                            src={url}
                             alt="img"
-                            class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-out handle_blur blur-xs scale-95"
+                            class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-out handle_blur blur-xs"
                         />
                     );
                 })
             }
         </div>
-        <div class="mb-4 text-white/10 mx-auto mix-blend-difference">
-            All Rights Reserved. 2025
-        </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
         if ("scrollRestoration" in history) {
             history.scrollRestoration = "manual";
         }
 
         const img_wrapper = document.getElementById("img_wrapper");
-        const imgs = img_wrapper?.querySelectorAll("#img_static");
+        const imgs =
+            img_wrapper?.querySelectorAll<HTMLImageElement>("#img_static");
         const text = document.querySelector(".fixed");
+
+        imgs?.forEach((img) => {
+            img.addEventListener("load", async () => {
+                const i = new Image();
+                i.src = img.src;
+
+                try {
+                    await i.decode();
+                    const url = new URL(i.src);
+                    console.log("Decoded URL:", url);
+
+                    img.replaceWith(i);
+                    i.setAttribute("data-loaded", "high-decoded");
+                } catch (err) {
+                    console.error("Error decoding image:", err);
+                }
+            });
+        });
 
         window.addEventListener("scroll", () => {
             imgs?.forEach((img) => {
-                const img_rect = img.getBoundingClientRect();
-                const text_rect = text?.getBoundingClientRect();
+                if (img instanceof HTMLImageElement) {
+                    const img_rect = img.getBoundingClientRect();
+                    const text_rect = text?.getBoundingClientRect();
 
-                if (
-                    text_rect &&
-                    img_rect.top <= text_rect?.bottom &&
-                    img_rect.bottom >= text_rect?.top
-                ) {
-                    img.classList.remove("blur-xs");
-                    img.classList.remove("scale-95");
-                } else {
-                    img.classList.add("blur-xs");
-                    img.classList.add("scale-95");
+                    if (
+                        text_rect &&
+                        img_rect.top <= text_rect?.bottom &&
+                        img_rect.bottom >= text_rect?.top
+                    ) {
+                        img.classList.remove("blur-xs");
+                    } else {
+                        img.classList.add("blur-xs");
+                    }
                 }
             });
         });

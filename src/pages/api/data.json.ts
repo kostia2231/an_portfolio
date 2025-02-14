@@ -33,6 +33,7 @@ export const GET: APIRoute = async (request) => {
         resources: res.resources,
         next_cursor: res.next_cursor,
       }),
+
       {
         headers: {
           "Content-Type": "application/json",
