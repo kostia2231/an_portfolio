@@ -60,7 +60,7 @@ const img_urls = imgs.map((img) => img.url.replace(/\.jpeg$/, ".webp"));
                             id="img_static"
                             src={url}
                             alt="img"
-                            class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-out handle_blur blur-xs"
+                            class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover transition-all duration-600 ease-out handle_blur "
                         />
                     );
                 })
@@ -80,13 +80,14 @@ const img_urls = imgs.map((img) => img.url.replace(/\.jpeg$/, ".webp"));
             img_wrapper?.querySelectorAll<HTMLImageElement>("#img_static");
         const text = document.querySelector(".fixed");
 
-        imgs?.forEach((img) => {
-            img.addEventListener("load", async () => {
+        imgs?.forEach((img, index) => {
+            img.addEventListener("click", async () => {
                 const i = new Image();
-                i.src = img.src;
-
+                i.src = img.currentSrc;
                 try {
-                    await i.decode();
+                    setTimeout(() => {
+                        i.decode();
+                    }, index * 200);
                     const url = new URL(i.src);
                     console.log("Decoded URL:", url);
                     img.getAttributeNames().forEach((attrName) => {
@@ -104,23 +105,28 @@ const img_urls = imgs.map((img) => img.url.replace(/\.jpeg$/, ".webp"));
             });
         });
 
-        window.addEventListener("scroll", () => {
-            imgs?.forEach((img) => {
-                if (img instanceof HTMLImageElement) {
-                    const img_rect = img.getBoundingClientRect();
-                    const text_rect = text?.getBoundingClientRect();
-
-                    if (
-                        text_rect &&
-                        img_rect.top <= text_rect?.bottom &&
-                        img_rect.bottom >= text_rect?.top
-                    ) {
-                        img.classList.remove("blur-xs");
-                    } else {
-                        img.classList.add("blur-xs");
-                    }
-                }
-            });
+        imgs?.forEach((img, index) => {
+            setTimeout(() => {
+                img.click();
+            }, index * 200);
         });
+
+        // window.addEventListener("scroll", () => {
+        //     imgs?.forEach((img) => {
+        //         if (img instanceof HTMLImageElement) {
+        //             const img_rect = img.getBoundingClientRect();
+        //             const text_rect = text?.getBoundingClientRect();
+        //             if (
+        //                 text_rect &&
+        //                 img_rect.top <= text_rect?.bottom &&
+        //                 img_rect.bottom >= text_rect?.top
+        //             ) {
+        //                 img.classList.remove("blur-xs");
+        //             } else {
+        //                 img.classList.add("blur-xs");
+        //             }
+        //         }
+        //     });
+        // });
     });
 </script>
