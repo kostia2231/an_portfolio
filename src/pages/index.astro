@@ -12,8 +12,6 @@ const res = await fetch(
 );
 const res_obj = await res.json();
 const imgs: Image[] = res_obj.resources;
-
-const first_img: string = imgs[1].transformed_url;
 const img_urls = imgs.map((img) => img.transformed_url);
 ---
 
@@ -31,10 +29,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
     />
 </head>
 
-<div class="text-[12px] bg-white">
+<div class="text-[13px] bg-white">
     <div class="fixed mt-[50vh]" id="center"></div>
     <div
-        class="fixed px-4 mt-[49vh] w-screen text-white/90 max-[500px]:mt-2 mix-blend-difference h-2 z-30"
+        class="fixed px-4 mt-[50vh] w-screen text-white/90 max-[500px]:mt-2 mix-blend-difference z-30"
     >
         <div class="flex justify-between">
             <div class="handle_from_left">
