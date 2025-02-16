@@ -54,21 +54,26 @@ const img_urls = imgs.map((img) => img.transformed_url);
             class="flex flex-col gap-4 w-fit my-4 items-center overflow-hidden max-[500px]:my-0"
         >
             {
-                img_urls.slice(1).map((url) => {
+                img_urls.map((url) => {
                     return (
-                        <div class="relative handle_animation" id="img_group">
+                        <div>
                             <div
-                                id="bg_blured"
-                                class="absolute inset-0 backdrop-blur-md z-10 transition-all duration-600 ease-out handle_blur"
-                            />
-                            <img
-                                loading="eager"
-                                decoding="async"
-                                id="img_static"
-                                src={url}
-                                alt="img"
-                                class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover"
-                            />
+                                class="relative handle_animation"
+                                id="img_group"
+                            >
+                                <div
+                                    id="bg_blured"
+                                    class="absolute inset-0 backdrop-blur-md z-10 transition-all duration-600 ease-out handle_blur"
+                                />
+                                <img
+                                    loading="eager"
+                                    decoding="async"
+                                    id="img_static"
+                                    src={url}
+                                    alt="img"
+                                    class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover"
+                                />
+                            </div>
                         </div>
                     );
                 })
@@ -93,13 +98,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
             );
 
         window.addEventListener("load", () => {
-            console.log(bg_blured[0]);
             bg_blured[0].classList.remove("backdrop-blur-md");
 
             imgs?.forEach((img) => {
                 img.decode()
                     .then(() => {
-                        console.log(`Image ${img.src} decoded successfully!`);
+                        // console.log(`Image ${img.src} decoded successfully!`);
                         img.setAttribute("decoded", "true");
                     })
                     .catch((err) => {
