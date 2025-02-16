@@ -31,7 +31,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
     />
 </head>
 
-<div class="text-[13px] bg-white">
+<div class="text-[12px] bg-white">
     <div class="fixed mt-[50vh]" id="center"></div>
     <div
         class="fixed px-4 mt-[49vh] w-screen text-white/90 max-[500px]:mt-2 mix-blend-difference h-2 z-30"
@@ -56,7 +56,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             {
                 img_urls.slice(1).map((url) => {
                     return (
-                        <div class="relative" id="img_group">
+                        <div class="relative handle_animation" id="img_group">
                             <div
                                 id="bg_blured"
                                 class="absolute inset-0 backdrop-blur-md z-10 transition-all duration-600 ease-out handle_blur"
@@ -108,8 +108,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
             });
 
             img_group.forEach((group, index) => {
-                // group.classList.add("handle_animation");
-                // group.style.animationDelay = `${index * 80}ms`;
+                const group_element = group as HTMLElement;
+                group_element.style.animationDuration = `${1000 + index * 300}ms`;
             });
         });
 
