@@ -39,23 +39,23 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 <p>Anastasia Potapova</p>
             </div>
             <div class="flex gap-4 handle_from_right">
-                <p class="cursor-pointer max-[500px]:hidden">Less</p>
+                <!-- <p class="cursor-pointer max-[500px]:hidden">Less</p> -->
                 <p class="cursor-pointer">Instagram</p>
                 <p class="cursor-pointer">E-mail</p>
             </div>
         </div>
     </div>
     <div
-        class="flex flex-col items-center justify-center max-[500px]:w-[100vw] p-1 max-[500px]:mx-0"
+        class="flex flex-col items-center justify-center max-[500px]:w-[100vw] p-1 max-[500px]:mx-0 w-full"
     >
         <div
             id="img_wrapper"
-            class="grid grid-cols-2 gap-1 items-center overflow-hidden my-1 max-[500px]:my-0 max-[500px]:grid-cols-1 w-full"
+            class="hidden flex-col justify-center gap-1 items-center overflow-hidden my-1 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit"
         >
             {
                 img_urls.map((url) => {
                     return (
-                        <div class="relative w-fit handle_blur" id="img_group">
+                        <div class="relative w-fit" id="img_group">
                             <div
                                 id="bg_blured"
                                 class="absolute w-full inset-0 z-10 transition-all duration-600 ease-out handle_blur backdrop-blur-md rounded"
@@ -66,7 +66,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover handle_blur rounded"
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover handle_blur rounded h-[80vh] "
                             />
                         </div>
                     );
@@ -124,10 +124,9 @@ const img_urls = imgs.map((img) => img.transformed_url);
             );
 
         window.addEventListener("load", () => {
-            // img_wrapper?.classList.remove("hidden");
-            // img_wrapper?.classList.add("grid");
-
-            img_wrapper?.classList.add("handle_animation_gallery");
+            img_wrapper?.classList.remove("hidden");
+            img_wrapper?.classList.add("flex");
+            img_wrapper?.classList.add("handle_animation");
             bg_blured[0].classList.remove("backdrop-blur-md");
 
             imgs?.forEach((img) => {
