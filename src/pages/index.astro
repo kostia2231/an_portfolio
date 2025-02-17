@@ -58,7 +58,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                         <div class="relative w-fit handle_blur" id="img_group">
                             <div
                                 id="bg_blured"
-                                class="absolute w-full inset-0 z-10 transition-all duration-600 ease-out handle_blur backdrop-blur-md"
+                                class="absolute w-full inset-0 z-10 transition-all duration-600 ease-out handle_blur backdrop-blur-md rounded"
                             />
                             <img
                                 loading="eager"
@@ -66,7 +66,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover handle_blur"
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover handle_blur rounded"
                             />
                         </div>
                     );
@@ -124,7 +124,9 @@ const img_urls = imgs.map((img) => img.transformed_url);
             );
 
         window.addEventListener("load", () => {
-            img_wrapper?.classList.replace("hidden", "grid");
+            img_wrapper?.classList.remove("hidden");
+            img_wrapper?.classList.add("grid");
+
             img_wrapper?.classList.add("handle_animation_gallery");
             bg_blured[0].classList.remove("backdrop-blur-md");
 
