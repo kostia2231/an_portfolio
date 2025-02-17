@@ -44,9 +44,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     <p
                         class="opacity-20 cursor-pointer max-[500px]:hidden hover:opacity-100"
                     >
-                        <a href="/more">More</a>
+                        <a href="/">Less</a>
                     </p>
                 </div>
+
                 <p class="cursor-pointer">Instagram</p>
                 <p class="cursor-pointer">E-mail</p>
             </div>
@@ -57,7 +58,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
     >
         <div
             id="img_wrapper"
-            class="hidden flex-col justify-center gap-1 items-center overflow-hidden my-1 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit"
+            class="hidden flex-wrap justify-center gap-1 items-center overflow-hidden my-1 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit"
         >
             {
                 img_urls.map((url) => {
@@ -81,38 +82,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }
         </div>
     </div>
-    <!-- <div
-        class="flex flex-col items-center justify-center max-[500px]:w-[100vw]"
-    >
-        <div
-            id="img_wrapper"
-            class="flex flex-col gap-1 items-center overflow-hidden my-1 max-[500px]:my-0 w-full"
-        >
-            {
-                img_urls.map((url) => {
-                    return (
-                        <div
-                            class="relative handle_animation w-fit"
-                            id="img_group"
-                        >
-                            <div
-                                id="bg_blured"
-                                class="absolute w-full inset-0 backdrop-blur-md z-10 transition-all duration-600 ease-out handle_blur"
-                            />
-                            <img
-                                loading="eager"
-                                decoding="async"
-                                id="img_static"
-                                src={url}
-                                alt="img"
-                                class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover"
-                            />
-                        </div>
-                    );
-                })
-            }
-        </div>
-    </div> -->
 </div>
 
 <script>
@@ -135,6 +104,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             img_wrapper?.classList.add("flex");
             img_wrapper?.classList.add("handle_animation");
             bg_blured[0].classList.remove("backdrop-blur-md");
+            bg_blured[1].classList.remove("backdrop-blur-md");
 
             imgs?.forEach((img) => {
                 img.decode()
