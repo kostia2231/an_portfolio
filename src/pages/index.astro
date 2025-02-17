@@ -50,7 +50,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
     >
         <div
             id="img_wrapper"
-            class="hidden grid-cols-2 gap-1 items-center overflow-hidden my-1 max-[500px]:my-0 max-[500px]:grid-cols-1 w-full"
+            class="grid grid-cols-2 gap-1 items-center overflow-hidden my-1 max-[500px]:my-0 max-[500px]:grid-cols-1 w-full"
         >
             {
                 img_urls.map((url) => {
@@ -124,8 +124,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
             );
 
         window.addEventListener("load", () => {
-            img_wrapper?.classList.remove("hidden");
-            img_wrapper?.classList.add("grid");
+            // img_wrapper?.classList.remove("hidden");
+            // img_wrapper?.classList.add("grid");
 
             img_wrapper?.classList.add("handle_animation_gallery");
             bg_blured[0].classList.remove("backdrop-blur-md");
