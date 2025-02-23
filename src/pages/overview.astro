@@ -76,25 +76,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
         }
 
         const img_wrapper = document.getElementById("img_wrapper");
-        // const bg_blured = document.querySelectorAll("#bg_blured");
-        const img_group = document.querySelectorAll("#img_group");
-        // const center = document.querySelector("#center");
         const imgs =
             img_wrapper?.querySelectorAll<HTMLImageElement>(
                 "img[id=img_static]",
             );
 
         window.addEventListener("load", () => {
-            // imgs?.forEach((img, index) => {
-            //     img.classList.add("handle_animation");
-            //     // img.style.animationDuration = `${900 + index * 300}ms`;
-            // });
-            // img_wrapper?.classList.remove("hidden");
-            // img_wrapper?.classList.add("flex");
-            // img_wrapper?.classList.add("handle_animation");
-            // bg_blured[0].classList.remove("backdrop-blur-md");
-            // bg_blured[1].classList.remove("backdrop-blur-md");
-
             imgs?.forEach((img) => {
                 img.decode()
                     .then(() => {
@@ -103,11 +90,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     .catch((err) => {
                         console.error(`Error decoding image ${img.src}:`, err);
                     });
-            });
-
-            img_group.forEach((group, index) => {
-                const group_element = group as HTMLElement;
-                group_element.style.animationDuration = `${900 + index * 300}ms`;
             });
         });
     });
