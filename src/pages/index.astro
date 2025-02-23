@@ -8,7 +8,6 @@ type Image = {
 
 const res = await fetch(
     "https://subtle-palmier-ae368e.netlify.app/api/data.json",
-    // "http://localhost:8888/api/data.json",
 );
 const res_obj = await res.json();
 const imgs: Image[] = res_obj.resources;
@@ -129,37 +128,43 @@ const img_urls = imgs.map((img) => img.transformed_url);
             });
         }
 
-        const observer = new IntersectionObserver(callback, options);
+        if (window.innerWidth > 500) {
+            const observer = new IntersectionObserver(callback, options);
+            bg_blured.forEach((bg, index) => {
+                (bg as HTMLElement).dataset.index = index.toString();
+                observer.observe(bg);
+            });
+        }
 
-        bg_blured.forEach((bg, index) => {
-            (bg as HTMLElement).dataset.index = index.toString();
-            observer.observe(bg);
-        });
+        let ticking = false;
+        const checkElements = () => {
+            const middleScreen = window.innerHeight / 2;
 
-        // let ticking = false;
-        // const checkElements = () => {
-        //     const middleScreen = window.innerHeight / 2;
+            bg_blured.forEach((bg) => {
+                const rect = bg.getBoundingClientRect();
 
-        //     bg_blured.forEach((bg) => {
-        //         const rect = bg.getBoundingClientRect();
+                if (rect.top <= middleScreen && rect.bottom >= middleScreen) {
+                    bg.classList.remove("backdrop-blur-sm");
+                } else {
+                    bg.classList.add("backdrop-blur-sm");
+                }
+            });
+            ticking = false;
+        };
 
-        //         if (rect.top <= middleScreen && rect.bottom >= middleScreen) {
-        //             bg.classList.remove("backdrop-blur-md");
-        //         } else {
-        //             bg.classList.add("backdrop-blur-md");
-        //         }
-        //     });
-        //     ticking = false;
-        // };
+        const onScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(checkElements);
+                ticking = true;
+            }
+        };
+        console.log(window.innerWidth);
 
-        // const onScroll = () => {
-        //     if (!ticking) {
-        //         requestAnimationFrame(checkElements);
-        //         ticking = true;
-        //     }
-        // };
+        if (window.innerWidth < 500) {
+            bg_blured[0].classList.remove("backdrop-blur-sm");
+            window.addEventListener("scroll", onScroll);
+        }
 
-        // window.addEventListener("scroll", onScroll);
         window.addEventListener("load", () => {
             // img_wrapper?.classList.remove("hidden");
             // img_wrapper?.classList.add("grid");
