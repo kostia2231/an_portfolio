@@ -29,10 +29,9 @@ const img_urls = imgs.map((img) => img.transformed_url);
     />
 </head>
 
-<div class="text-[13px] bg-white">
-    <div class="fixed mt-[50vh]" id="center"></div>
+<div class="text-[12px] bg-white">
     <div
-        class="fixed px-2 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-4 mix-blend-difference z-30"
+        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-4 mix-blend-difference z-30 max-w-[1440px]"
     >
         <div class="flex justify-between">
             <div class="handle_from_left">
@@ -40,11 +39,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
             </div>
             <div class="flex gap-4 handle_from_right">
                 <div class="flex gap-1">
-                    <p class="cursor-pointer max-[500px]:hidden">Show:</p>
-                    <p
-                        class="opacity-20 cursor-pointer max-[500px]:hidden hover:opacity-100"
-                    >
-                        <a href="/more">More</a>
+                    <p class="cursor-pointer max-[500px]:hidden">
+                        <a href="/overview">Overview</a>
                     </p>
                 </div>
                 <p class="cursor-pointer">Instagram</p>
@@ -54,26 +50,28 @@ const img_urls = imgs.map((img) => img.transformed_url);
     </div>
     <div
         class="flex flex-col items-center justify-center max-[500px]:w-[100vw] p-1 max-[500px]:mx-0 w-full"
+        id="img_scroll_area"
     >
         <div
             id="img_wrapper"
-            class="hidden flex-col justify-center gap-1 items-center overflow-hidden my-1 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit"
+            class="flex flex-nowrap flex-col justify-center gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit"
         >
             {
-                img_urls.map((url) => {
+                img_urls.map((url, index) => {
                     return (
                         <div class="relative w-fit" id="img_group">
                             <div
+                                data-={index}
                                 id="bg_blured"
-                                class="absolute w-full inset-0 z-10 transition-all duration-600 ease-out handle_blur backdrop-blur-md rounded"
+                                class="absolute w-full inset-0 z-10 transition-all backdrop-blur-sm duration-700 ease-in-out handle_blur rounded-xs"
                             />
                             <img
                                 loading="eager"
-                                decoding="async"
+                                decoding="sync"
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover handle_blur rounded h-[80vh] "
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover handle_blur rounded-xs h-[80vh] "
                             />
                         </div>
                     );
@@ -81,38 +79,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }
         </div>
     </div>
-    <!-- <div
-        class="flex flex-col items-center justify-center max-[500px]:w-[100vw]"
-    >
-        <div
-            id="img_wrapper"
-            class="flex flex-col gap-1 items-center overflow-hidden my-1 max-[500px]:my-0 w-full"
-        >
-            {
-                img_urls.map((url) => {
-                    return (
-                        <div
-                            class="relative handle_animation w-fit"
-                            id="img_group"
-                        >
-                            <div
-                                id="bg_blured"
-                                class="absolute w-full inset-0 backdrop-blur-md z-10 transition-all duration-600 ease-out handle_blur"
-                            />
-                            <img
-                                loading="eager"
-                                decoding="async"
-                                id="img_static"
-                                src={url}
-                                alt="img"
-                                class="h-[80vh] max-[500px]:h-auto max-[500px]:w-full object-cover"
-                            />
-                        </div>
-                    );
-                })
-            }
-        </div>
-    </div> -->
 </div>
 
 <script>
@@ -121,20 +87,83 @@ const img_urls = imgs.map((img) => img.transformed_url);
             history.scrollRestoration = "manual";
         }
 
-        const img_wrapper = document.getElementById("img_wrapper");
+        const url_params: string = window.location.search;
+        const url_arr: string[] = url_params.split("");
+        const index: number = parseInt(url_arr[url_arr.length - 1]) || 0;
+
+        console.log(index);
+
         const bg_blured = document.querySelectorAll("#bg_blured");
-        const img_group = document.querySelectorAll("#img_group");
-        const center = document.querySelector("#center");
+        if (index > 0) {
+            bg_blured[index].scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+            });
+        }
+
+        // const img_group = document.querySelectorAll("#img_group");
+        const img_wrapper = document.getElementById("img_wrapper");
         const imgs =
             img_wrapper?.querySelectorAll<HTMLImageElement>(
                 "img[id=img_static]",
             );
 
+        const options = {
+            rootMargin: "150px",
+            threshold: 1.0,
+        };
+
+        function callback(entries: IntersectionObserverEntry[]) {
+            entries.forEach((e) => {
+                if (e.intersectionRatio === 1) {
+                    const img_index = (e.target as HTMLElement).dataset.index;
+                    if (img_index !== undefined) {
+                        const new_url = new URL(window.location.href);
+                        new_url.searchParams.set("img", img_index);
+                        window.history.pushState({}, "", new_url.toString());
+                    }
+                    e.target.classList.remove("backdrop-blur-sm");
+                } else {
+                    e.target.classList.add("backdrop-blur-sm");
+                }
+            });
+        }
+
+        const observer = new IntersectionObserver(callback, options);
+
+        bg_blured.forEach((bg, index) => {
+            (bg as HTMLElement).dataset.index = index.toString();
+            observer.observe(bg);
+        });
+
+        // let ticking = false;
+        // const checkElements = () => {
+        //     const middleScreen = window.innerHeight / 2;
+
+        //     bg_blured.forEach((bg) => {
+        //         const rect = bg.getBoundingClientRect();
+
+        //         if (rect.top <= middleScreen && rect.bottom >= middleScreen) {
+        //             bg.classList.remove("backdrop-blur-md");
+        //         } else {
+        //             bg.classList.add("backdrop-blur-md");
+        //         }
+        //     });
+        //     ticking = false;
+        // };
+
+        // const onScroll = () => {
+        //     if (!ticking) {
+        //         requestAnimationFrame(checkElements);
+        //         ticking = true;
+        //     }
+        // };
+
+        // window.addEventListener("scroll", onScroll);
         window.addEventListener("load", () => {
-            img_wrapper?.classList.remove("hidden");
-            img_wrapper?.classList.add("flex");
-            img_wrapper?.classList.add("handle_animation");
-            bg_blured[0].classList.remove("backdrop-blur-md");
+            // img_wrapper?.classList.remove("hidden");
+            // img_wrapper?.classList.add("grid");
+            // img_g.style.animationDuration = `${900 + index * 300}ms`;
 
             imgs?.forEach((img) => {
                 img.decode()
@@ -144,30 +173,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     .catch((err) => {
                         console.error(`Error decoding image ${img.src}:`, err);
                     });
-            });
-
-            img_group.forEach((group, index) => {
-                const group_element = group as HTMLElement;
-                group_element.style.animationDuration = `${900 + index * 300}ms`;
-            });
-        });
-
-        window.addEventListener("scroll", () => {
-            bg_blured?.forEach((bg) => {
-                if (bg) {
-                    const img_rect = bg.getBoundingClientRect();
-                    const text_rect = center?.getBoundingClientRect();
-
-                    if (
-                        text_rect &&
-                        img_rect.top <= text_rect?.bottom &&
-                        img_rect.bottom >= text_rect?.top
-                    ) {
-                        bg.classList.remove("backdrop-blur-md");
-                    } else {
-                        bg.classList.add("backdrop-blur-md");
-                    }
-                }
             });
         });
     });
