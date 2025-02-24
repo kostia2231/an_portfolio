@@ -30,7 +30,7 @@ html::-webkit-scrollbar {
 }
 
 .handle_animation_gallery {
-    animation: image_gallery 1s ease-in-out forwards;
+    animation: image_gallery 0.6s ease-in-out forwards;
     will-change: opacity;
 }
 
@@ -86,10 +86,12 @@ html::-webkit-scrollbar {
 
 @keyframes image_gallery {
     0% {
-        opacity: 0;
+        /* opacity: 0; */
+        filter: blur(5px);
     }
 
     100% {
-        opacity: 1;
+        /* opacity: 1; */
+        filter: blur(0);
     }
 }

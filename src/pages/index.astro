@@ -38,12 +38,14 @@ const img_urls = imgs.map((img) => img.transformed_url);
             </div>
             <div class="flex gap-4 handle_from_right">
                 <div class="flex gap-1">
-                    <p class="cursor-pointer max-[500px]:hidden">
-                        <a href="/overview">Index</a>
+                    <p
+                        class="cursor-pointer max-[500px]:hidden hover:opacity-50"
+                    >
+                        <a href="/overview">Overview</a>
                     </p>
                 </div>
-                <p class="cursor-pointer">Instagram</p>
-                <p class="cursor-pointer">E-mail</p>
+                <p class="cursor-pointer hover:opacity-50">Instagram</p>
+                <p class="cursor-pointer hover:opacity-50">E-mail</p>
             </div>
         </div>
     </div>
@@ -82,6 +84,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
+        console.log(`no-one was here.`);
+
         if ("scrollRestoration" in history) {
             history.scrollRestoration = "manual";
         }

@@ -38,29 +38,30 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 <p>Anastasia Potapova</p>
             </div>
             <div class="flex gap-4 handle_from_right pointer-events-auto">
-                <a> <p class="cursor-pointer">Instagram</p> </a>
-                <p class="cursor-pointer">E-mail</p>
+                <a>
+                    <p class="cursor-pointer hover:opacity-50">Instagram</p>
+                </a>
+                <p class="cursor-pointer hover:opacity-50">E-mail</p>
             </div>
         </div>
     </div>
 
     <div
         id="img_wrapper"
-        class="w-[850px] flex flex-wrap gap-1 justify-center overflow-hidden m-4 max-[500px]:my-0 max-[500px]:grid-cols-1"
+        class="handle_animation_gallery w-[850px] flex flex-wrap gap-1 justify-center overflow-hidden m-4 max-[500px]:my-0 max-[500px]:grid-cols-1 handle_blur"
     >
         {
             img_urls.map((url, index) => {
                 return (
                     <a
                         href={`/?img=${index}`}
-                        class="text-gray-200 hover:text-black transition-all w-fit h-fit"
+                        class="text-gray-200 transition-all w-fit h-fit hover:opacity-90"
                     >
-                        <p class="pl-1">{index + 1}</p>
                         <img
                             id="img_static"
                             src={url}
                             alt="img"
-                            class="handle_animation_gallery max-[500px]:h-auto max-[500px]:w-full object-cover handle_blur rounded-xs h-[30vh] max-w-full  transition-all "
+                            class="max-[500px]:h-auto max-[500px]:w-full object-cover handle_blur rounded-xs h-[30vh] max-w-full transition-all"
                         />
                     </a>
                 );
@@ -71,6 +72,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
+        console.log(`no-one was here.`);
+
         if ("scrollRestoration" in history) {
             history.scrollRestoration = "manual";
         }
