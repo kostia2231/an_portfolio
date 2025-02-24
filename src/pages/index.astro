@@ -38,11 +38,13 @@ const img_urls = imgs.map((img) => img.transformed_url);
             </div>
             <div class="flex gap-4 handle_from_right">
                 <div class="flex gap-1">
-                    <p
-                        class="cursor-pointer max-[500px]:hidden hover:opacity-50"
+                    <a href="/overview" id="overview">
+                        <p
+                            class="cursor-pointer max-[500px]:hidden hover:opacity-50"
+                        >
+                            Overview
+                        </p></a
                     >
-                        <a href="/overview">Overview</a>
-                    </p>
                 </div>
                 <p class="cursor-pointer hover:opacity-50">Instagram</p>
                 <p class="cursor-pointer hover:opacity-50">E-mail</p>
@@ -85,9 +87,26 @@ const img_urls = imgs.map((img) => img.transformed_url);
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
         console.log(`no-one was here.`);
-
         if ("scrollRestoration" in history) {
             history.scrollRestoration = "manual";
+        }
+
+        const overview: HTMLAnchorElement = document.getElementById(
+            "overview",
+        ) as HTMLAnchorElement;
+        if (overview) {
+            overview.addEventListener("mouseenter", () => {
+                const url = overview.href;
+                if (!url) return;
+
+                const prefetch = document.createElement("link");
+                const is_prefetch_link =
+                    document.getElementById("prefetch_link");
+                if (!is_prefetch_link) document.head.appendChild(prefetch);
+                prefetch.id = "prefetch_link";
+                prefetch.rel = "prefetch";
+                prefetch.href = url;
+            });
         }
 
         const url_params: string = window.location.search;
