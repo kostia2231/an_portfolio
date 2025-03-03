@@ -85,6 +85,20 @@ const img_urls = imgs.map((img) => img.transformed_url);
 </div>
 
 <script>
+    const params = new URLSearchParams(window.location.search);
+    const index = parseInt(params.get("img") || "0");
+    const bg_blured: NodeListOf<Element> =
+        document.querySelectorAll("#bg_blured");
+
+    bg_blured[index].scrollIntoView({
+        behavior: "instant",
+        block: "center",
+    });
+
+    requestAnimationFrame(() => {
+        const page = document.getElementById("page");
+        if (page) page.style.opacity = "1";
+    });
     document.addEventListener("DOMContentLoaded", async () => {
         console.log(`no-one was here.`);
         if ("scrollRestoration" in history) {
@@ -115,8 +129,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
             img_wrapper?.querySelectorAll<HTMLImageElement>(
                 "img[id=img_static]",
             );
-        const bg_blured: NodeListOf<Element> =
-            document.querySelectorAll("#bg_blured");
 
         if (window.innerWidth > 500) {
             const options: { rootMargin: string; threshold: number } = {
@@ -188,19 +200,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
         }
 
         window.addEventListener("load", () => {
-            const params = new URLSearchParams(window.location.search);
-            const index = parseInt(params.get("img") || "0");
-
-            bg_blured[index].scrollIntoView({
-                behavior: "instant",
-                block: "center",
-            });
-
-            requestAnimationFrame(() => {
-                const page = document.getElementById("page");
-                if (page) page.style.opacity = "1";
-            });
-
             imgs?.forEach((img) => {
                 img.decode()
                     .then(() => {
