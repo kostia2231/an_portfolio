@@ -124,10 +124,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
             block: "center",
         });
 
-        // requestAnimationFrame(() => {
-        //     const page = document.getElementById("img_scroll_area");
-        //     if (page) page.style.opacity = "1";
-        // });
+        requestAnimationFrame(() => {
+            const page = document.getElementById("img_scroll_area");
+            if (page) page.style.opacity = "1";
+        });
 
         const img_wrapper: HTMLElement | null =
             document.getElementById("img_wrapper");
