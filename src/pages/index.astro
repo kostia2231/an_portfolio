@@ -30,7 +30,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
 <div class="text-[12px] bg-white">
     <div
-        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[49vh] mix-blend-difference z-30 max-w-[1440px]"
+        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-gray-400 max-[500px]:mt-[49vh] mix-blend-difference z-30 max-w-[1440px]"
     >
         <div class="flex justify-between">
             <div class="handle_from_left">
@@ -52,7 +52,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
         </div>
     </div>
     <div
-        class="flex flex-col items-center justify-center max-[500px]:w-[100vw] p-1 max-[500px]:mx-0 w-full transition-all"
+        class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
         id="img_scroll_area"
     >
         <div
@@ -69,8 +69,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 class="absolute w-full inset-0 z-10 transition-all backdrop-blur-sm duration-700 ease-in-out handle_blur rounded-xs"
                             />
                             <img
-                                loading="eager"
-                                decoding="sync"
+                                loading="lazy"
+                                decoding="async"
                                 id="img_static"
                                 src={url}
                                 alt="img"
@@ -82,13 +82,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }
         </div>
     </div>
+    <!-- <script src="../scripts/index.js"></script> -->
 </div>
-
-<script src="https://unpkg.com/lenis@1.3.1/dist/lenis.min.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
-        console.log(`no-one was here.`);
+        console.log(`no-one was here\n13am.org`);
         if ("scrollRestoration" in history) {
             history.scrollRestoration = "manual";
         }
@@ -124,11 +123,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
             block: "center",
         });
 
-        // requestAnimationFrame(() => {
-        //     const page = document.getElementById("img_scroll_area");
-        //     if (page) page.style.opacity = "1";
-        // });
-
         const img_wrapper: HTMLElement | null =
             document.getElementById("img_wrapper");
 
@@ -137,45 +131,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 "img[id=img_static]",
             );
 
-        // const options: { rootMargin: string; threshold: number } = {
-        //     rootMargin: "150px",
-        //     threshold: 1.0,
-        // };
-
-        // function callback(entries: IntersectionObserverEntry[]): void {
-        //     entries.forEach((e) => {
-        //         if (e.intersectionRatio === 1) {
-        //             const img_index: string | undefined = (
-        //                 e.target as HTMLElement
-        //             ).dataset.index;
-
-        //             if (img_index !== undefined) {
-        //                 const new_url: URL = new URL(window.location.href);
-        //                 new_url.searchParams.set("img", img_index);
-        //                 window.history.pushState({}, "", new_url.toString());
-        //             }
-        //             e.target.classList.remove("backdrop-blur-sm");
-        //         } else {
-        //             e.target.classList.add("backdrop-blur-sm");
-        //         }
-        //     });
-        // }
-
-        // if (window) {
-        //     const observer: IntersectionObserver = new IntersectionObserver(
-        //         callback,
-        //         options,
-        //     );
-        //     bg_blured.forEach((bg, index) => {
-        //         (bg as HTMLElement).dataset.index = index.toString();
-        //         observer.observe(bg);
-        //     });
-        // }
-
         let ticking: boolean = false;
         function check_elements() {
             const middle_screen: number = window.innerHeight / 2;
-            console.log(middle_screen);
+
             bg_blured.forEach((bg) => {
                 const rect: DOMRect = bg.getBoundingClientRect();
 
