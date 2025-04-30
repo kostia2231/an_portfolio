@@ -21,6 +21,11 @@ html::-webkit-scrollbar {
     display: none;
 }
 
+.blurr {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
 .handle_blur {
     will-change: filter;
 }

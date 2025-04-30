@@ -97,7 +97,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
         bgBlured.forEach((item, index) => {
             progress!.textContent = index.toString();
             if (index >= 1) {
-                item.classList.add("backdrop-blur-sm");
+                item.classList.add("blurr");
             }
         });
     });
