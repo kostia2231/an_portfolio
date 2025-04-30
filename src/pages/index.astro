@@ -58,7 +58,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
     <div id="loader" class="flex">
         <p class="m-auto mt-[50vh] max-[500px]:mt-[49vh]"><span id="progress">0</span>%</p>
     </div>
-    <div id="content" class="hidden">
+    <div id="content" class="">
     <div
         class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
         id="img_scroll_area"
@@ -95,98 +95,137 @@ const img_urls = imgs.map((img) => img.transformed_url);
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
-    const img_wrapper: HTMLElement | null = document.getElementById("img_wrapper");
-    const imgs: NodeListOf<HTMLImageElement> | undefined = img_wrapper?.querySelectorAll("img[id=img_static]");
 
-    const total = imgs?.length || 0;
-    let loaded = 0;
 
-    const update_process = () => {
-        loaded++;
-        const percent = Math.floor((loaded / total) * 100);
-        const progress = document.getElementById("progress");
-        const loader = document.getElementById("loader");
-        const content = document.getElementById("content");
-        progress!.textContent = percent.toString();
+    document.addEventListener("DOMContentLoaded", async () => {
+        const img_wrapper: HTMLElement | null =
+            document.getElementById("img_wrapper");
 
-        if (loaded === total) {
-            loader?.classList.add("hidden");
-            content?.classList.remove("hidden");
+        const imgs: NodeListOf<HTMLImageElement> | undefined =
+            img_wrapper?.querySelectorAll<HTMLImageElement>(
+                "img[id=img_static]",
+            );
+
+        imgs?.forEach((img) => {
+            img.decode()
+                .then(() => {
+                    img.setAttribute("decoded", "true");
+                })
+                .catch((err) => {
+                    console.error(
+                        `error decoding image ${img.src}:`,
+                        (err as Error).message,
+                    );
+                });
+        });
+
+        const total = imgs!.length
+        let loaded = 0
+
+        const update_process = () =>{
+          loaded++
+          const percent = Math.floor((loaded/total) * 100)
+          const progress = document.getElementById("progress")
+          const loader = document.getElementById("loader")
+          const content = document.getElementById("content")
+          progress!.textContent = percent.toString()
+
+          if(loaded === total){
+            loader?.classList.add("hidden")
+            content?.classList.remove("hidden")
+          }
         }
-    };
 
-    // Инициализация загрузки изображений
-    imgs?.forEach((img) => {
-        if (img.complete) {
-            // Если изображение уже загружено, обновляем прогресс
-            update_process();
-        } else {
-            // В противном случае слушаем события загрузки и ошибки
-            img.addEventListener("load", update_process);
+        for (let img of imgs!){
+          if(img.complete){
+            update_process()
+          } else{
+            img.addEventListener("load", update_process)
             img.addEventListener("error", () => {
-                console.error(`Image failed to load: ${img.src}`);
-                update_process();
+              console.error(`Image failed to load: ${img.src}`);
+              update_process()
+            });
+          }
+        }
+
+        console.log(`no-one was here\n13am.org`);
+        if ("scrollRestoration" in history) {
+            history.scrollRestoration = "manual";
+        }
+
+        const overview: HTMLAnchorElement = document.getElementById(
+            "overview",
+        ) as HTMLAnchorElement;
+        if (overview) {
+            overview.addEventListener("mouseenter", () => {
+                const url = overview.href;
+                if (!url) return;
+
+                const prefetch = document.createElement("link");
+                const is_prefetch_link =
+                    document.getElementById("prefetch_link");
+                if (!is_prefetch_link) document.head.appendChild(prefetch);
+                prefetch.id = "prefetch_link";
+                prefetch.rel = "prefetch";
+                prefetch.href = url;
             });
         }
-    });
 
-    // Обработка появления элементов на экране
-    const bg_blured: NodeListOf<Element> = document.querySelectorAll("#bg_blured");
+        const params: URLSearchParams = new URLSearchParams(
+            window.location.search,
+        );
+        const index: number = parseInt(params.get("img") || "0");
 
-    const params: URLSearchParams = new URLSearchParams(window.location.search);
-    const index: number = parseInt(params.get("img") || "0");
+        const bg_blured: NodeListOf<Element> =
+            document.querySelectorAll("#bg_blured");
 
-    bg_blured[index]?.scrollIntoView({
-        behavior: "instant",
-        block: "center",
-    });
-
-    let ticking = false;
-
-    function check_elements() {
-        const middle_screen = window.innerHeight / 2;
-
-        bg_blured.forEach((bg) => {
-            const rect = bg.getBoundingClientRect();
-
-            if (rect.top <= middle_screen && rect.bottom >= middle_screen) {
-                bg.classList.remove("backdrop-blur-sm");
-            } else {
-                bg.classList.add("backdrop-blur-sm");
-            }
+        bg_blured[index].scrollIntoView({
+            behavior: "instant",
+            block: "center",
         });
-        ticking = false;
-    }
 
-    function on_scroll() {
-        if (!ticking) {
-            requestAnimationFrame(check_elements);
-            ticking = true;
+
+        let ticking: boolean = false;
+        function check_elements() {
+            const middle_screen: number = window.innerHeight / 2;
+
+            bg_blured.forEach((bg) => {
+                const rect: DOMRect = bg.getBoundingClientRect();
+
+                if (rect.top <= middle_screen && rect.bottom >= middle_screen) {
+                    bg.classList.remove("backdrop-blur-sm");
+                } else {
+                    bg.classList.add("backdrop-blur-sm");
+                }
+            });
+            ticking = false;
         }
-    }
 
-    if (window) {
-        bg_blured[0]?.classList.remove("backdrop-blur-sm");
-        window.addEventListener("scroll", on_scroll);
-    }
+        function on_scroll() {
+            if (!ticking) {
+                requestAnimationFrame(check_elements);
+                ticking = true;
+            }
+        }
 
-    window.addEventListener("load", () => {
-        imgs?.forEach((img) => {
-            if (!img.complete) {
+        if (window) {
+            bg_blured[0].classList.remove("backdrop-blur-sm");
+            window.addEventListener("scroll", on_scroll);
+        }
+
+        window.addEventListener("load", () => {
+            imgs?.forEach((img) => {
                 img.decode()
                     .then(() => {
                         img.setAttribute("decoded", "true");
-                        update_process();
                     })
                     .catch((err) => {
-                        console.error(`Error decoding image ${img.src}:`, (err as Error).message);
-                        update_process();
+                        console.error(
+                            `error decoding image ${img.src}:`,
+                            (err as Error).message,
+                        );
                     });
-            } else {
-                update_process();
-            }
+            });
         });
     });
-});
 </script>
