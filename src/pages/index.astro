@@ -58,9 +58,9 @@ const img_urls = imgs.map((img) => img.transformed_url);
     <div id="loader" class="flex">
         <p class="m-auto mt-[50vh] max-[500px]:mt-[49vh]"><span id="progress">0</span>%</p>
     </div>
-    <div id="content" class="hidden">
+
     <div
-        class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
+        class="hidden flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
         id="img_scroll_area"
     >
         <div
@@ -90,7 +90,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }
         </div>
     </div>
-    </div>
+
     <!-- <script src="../scripts/index.js"></script> -->
 </div>
 
@@ -127,12 +127,14 @@ const img_urls = imgs.map((img) => img.transformed_url);
           const percent = Math.floor((loaded/total) * 100)
           const progress = document.getElementById("progress")
           const loader = document.getElementById("loader")
-          const content = document.getElementById("content")
+          const content = document.getElementById("img_scroll_area")
           progress!.textContent = percent.toString()
 
           if(loaded === total){
             loader?.classList.add("hidden")
             content?.classList.remove("hidden")
+            content?.classList.add("flex")
+
           }
         }
 
