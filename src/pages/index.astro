@@ -99,6 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const content = document.getElementById("content");
   const bgBlured = document.querySelectorAll("#bg_blured");
 
+  bgBlured.forEach(bg => {
+    bg.classList.add("backdrop-blur-sm");
+  });
+
   let loaded = 0;
   const total = images?.length || 0;
 
