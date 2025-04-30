@@ -96,115 +96,118 @@ const img_urls = imgs.map((img) => img.transformed_url);
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    const imgWrapper = document.getElementById("img_wrapper");
-    const imgs = imgWrapper?.querySelectorAll<HTMLImageElement>("img[id=img_static]");
-    const images = document.images
-    const progress = document.getElementById("progress");
-    const loader = document.getElementById("loader");
-    const content = document.getElementById("content");
+document.addEventListener("DOMContentLoaded", async () => {
+  const imgWrapper = document.getElementById("img_wrapper");
+  const imgs = imgWrapper?.querySelectorAll("img[id=img_static]");
+  const images = document.images;
+  const progress = document.getElementById("progress");
+  const loader = document.getElementById("loader");
+  const content = document.getElementById("content");
 
-    imgs?.forEach((img) => {
-      img.decode().then(() => {
-        img.setAttribute("decoded", "true");
-      }).catch((err) => {
-        console.error(`Error decoding image ${img.src}:`, (err as Error).message);
-      });
-    });
+  let loaded = 0;
+  const total = images?.length || 0;
 
-    let loaded = 0;
-    const total = images?.length || 0;
-
-    const updateProgress = () => {
-      if (loaded <= total) {
-        progress!.textContent = Math.floor((loaded / total) * 100).toString();
-        console.log(`Total: ${total}, Loaded: ${loaded}`);
-
-        if (loaded === total) {
-          if (loader) loader.style.display = "none";
-          if (content) content.style.visibility = "visible";
-        }
+  const updateProgress = () => {
+    if (loaded <= total) {
+      progress!.textContent = Math.floor((loaded / total) * 100).toString();
+      console.log(`Total: ${total}, Loaded: ${loaded}`);
+      if (loaded === total) {
+        if (loader) loader.style.display = "none";
+        if (content) content.style.visibility = "visible";
       }
+    }
+  };
+
+  const handleImageLoad = (img: HTMLImageElement) => {
+    img.onload = () => {
+      loaded++;
+      console.log(`Image loaded: ${img.src}`);
+      updateProgress();
     };
 
-    const handleImageLoad = (img: HTMLImageElement) => {
-      img.onload = () => {
-        loaded++;
-        console.log(`Image loaded: ${img.src}`);
-        updateProgress();
-      };
+    img.onerror = () => {
+      console.error(`Image failed to load: ${img.src}`);
+      loaded++;
+      updateProgress();
+    };
+    if (img.complete) {
+      loaded++;
+      updateProgress();
+    }
+  };
 
-      img.onerror = () => {
-        console.error(`Image failed to load: ${img.src}`);
-        loaded++;
-        updateProgress();
-      };
+  imgs?.forEach((img) => {
+    if (img instanceof HTMLImageElement) {
+      img.decode()
+        .then(() => {
+          img.setAttribute("decoded", "true");
+          handleImageLoad(img);
+        })
+        .catch((err) => {
+          console.error(`Error decoding image ${img.src}:`, (err).message);
+          handleImageLoad(img);
+        });
 
       if (img.complete) {
         loaded++;
         updateProgress();
       }
-    };
-
-    imgs?.forEach(handleImageLoad);
-
-    imgs?.forEach((img) => {
-      if (img.complete) {
-        loaded++;
-        updateProgress();
-      }
-    });
-
-    const overview = document.getElementById("overview") as HTMLAnchorElement;
-    if (overview) {
-      overview.addEventListener("mouseenter", () => {
-        const url = overview.href;
-        if (url) {
-          const prefetch = document.createElement("link");
-          prefetch.id = "prefetch_link";
-          prefetch.rel = "prefetch";
-          prefetch.href = url;
-          if (!document.getElementById("prefetch_link")) {
-            document.head.appendChild(prefetch);
-          }
-        }
-      });
     }
-
-    const params = new URLSearchParams(window.location.search);
-    const index = parseInt(params.get("img") || "0", 10);
-
-    const bgBlured = document.querySelectorAll("#bg_blured");
-    bgBlured[index]?.scrollIntoView({ behavior: "instant", block: "center" });
-
-    let ticking = false;
-
-    const checkElements = () => {
-      const middleScreen = window.innerHeight / 2;
-
-      bgBlured.forEach((bg) => {
-        const rect = bg.getBoundingClientRect();
-        if (rect.top <= middleScreen && rect.bottom >= middleScreen) {
-          bg.classList.remove("backdrop-blur-sm");
-        } else {
-          bg.classList.add("backdrop-blur-sm");
-        }
-      });
-      ticking = false;
-    };
-
-    const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(checkElements);
-        ticking = true;
-      }
-    };
-
-    if (bgBlured.length > 0) {
-      bgBlured[0].classList.remove("backdrop-blur-sm");
-      window.addEventListener("scroll", onScroll);
-    }
-
-
   });
+
+  const bgBlured = document.querySelectorAll("#bg_blured");
+
+  let ticking = false;
+
+  const checkElements = () => {
+    const middleScreen = window.innerHeight / 2;
+
+    bgBlured.forEach((bg) => {
+      const rect = bg.getBoundingClientRect();
+      if (rect.top <= middleScreen && rect.bottom >= middleScreen) {
+        bg.classList.remove("backdrop-blur-sm");
+      } else {
+        bg.classList.add("backdrop-blur-sm");
+      }
+    });
+
+    ticking = false;
+  };
+
+  const onScroll = () => {
+    if (!ticking) {
+      requestAnimationFrame(checkElements);
+      ticking = true;
+    }
+  };
+
+  if (bgBlured.length > 0) {
+    bgBlured[0].classList.remove("backdrop-blur-sm");
+    window.addEventListener("scroll", onScroll);
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const index = parseInt(params.get("img") || "0", 10);
+  if (bgBlured.length > 0) {
+    const targetBg = bgBlured[index] || bgBlured[0];
+    targetBg.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  const overview = document.getElementById("overview") as HTMLAnchorElement;
+  if (overview) {
+    overview.addEventListener("mouseenter", () => {
+      const url = overview.href;
+      if (url) {
+        const prefetch = document.createElement("link");
+        prefetch.id = "prefetch_link";
+        prefetch.rel = "prefetch";
+        prefetch.href = url;
+        if (!document.getElementById("prefetch_link")) {
+          document.head.appendChild(prefetch);
+        }
+      }
+    });
+  }
+});
+
 </script>
