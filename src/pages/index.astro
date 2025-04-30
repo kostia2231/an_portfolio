@@ -163,9 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const rect = bg.getBoundingClientRect();
       const isInCenter = rect.top <= middleScreen && rect.bottom >= middleScreen;
       bg.classList.toggle("backdrop-blur-sm", !isInCenter);
-      if(!isInCenter){
-        bg.classList.add("backdrop-blur-sm")
-      }
+
     });
   };
 
@@ -173,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(checkElements);
   };
 
-  window.addEventListener("scroll", onScroll);
+  // window.addEventListener("scroll", onScroll);
 
   const overview = document.getElementById("overview");
   if (overview instanceof HTMLAnchorElement) {
