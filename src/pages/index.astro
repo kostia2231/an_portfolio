@@ -56,7 +56,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
         </div>
     </div>
     <div id="loader" class="flex">
-        <p class="m-auto mt-[50vh]"><span id="progress">0</span>%</p>
+        <p class="m-auto mt-[50vh] max-[500px]:mt-[49vh]"><span id="progress">0</span>%</p>
     </div>
     <div id="content" class="hidden">
     <div
@@ -119,8 +119,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 });
         });
 
-        const images = document.images
-        const total = images.length
+        const total = imgs!.length
         let loaded = 0
 
         const update_process = () =>{
@@ -137,7 +136,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
           }
         }
 
-        for (let img of images){
+        for (let img of imgs!){
           if(img.complete){
             update_process()
           } else{
