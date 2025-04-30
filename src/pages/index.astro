@@ -59,8 +59,9 @@ const img_urls = imgs.map((img) => img.transformed_url);
         <p class="m-auto mt-[50vh] max-[500px]:mt-[49vh]"><span id="progress">0</span>%</p>
     </div>
 
+    <div id="content" style="visibility: hidden;">
     <div
-        class="hidden flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
+        class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
         id="img_scroll_area"
     >
         <div
@@ -77,7 +78,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 class="absolute w-full inset-0 z-10 transition-all backdrop-blur-sm duration-700 ease-in-out handle_blur rounded-xs"
                             />
                             <img
-                                loading="lazy"
+                                loading="eager"
                                 decoding="async"
                                 id="img_static"
                                 src={url}
@@ -90,144 +91,120 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }
         </div>
     </div>
-
+</div>
     <!-- <script src="../scripts/index.js"></script> -->
 </div>
 
 <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const imgWrapper = document.getElementById("img_wrapper");
+    const imgs = imgWrapper?.querySelectorAll<HTMLImageElement>("img[id=img_static]");
+    const images = document.images
+    const progress = document.getElementById("progress");
+    const loader = document.getElementById("loader");
+    const content = document.getElementById("content");
 
-
-    document.addEventListener("DOMContentLoaded", async () => {
-        const img_wrapper: HTMLElement | null =
-            document.getElementById("img_wrapper");
-
-        const imgs: NodeListOf<HTMLImageElement> | undefined =
-            img_wrapper?.querySelectorAll<HTMLImageElement>(
-                "img[id=img_static]",
-            );
-
-        imgs?.forEach((img) => {
-            img.decode()
-                .then(() => {
-                    img.setAttribute("decoded", "true");
-                })
-                .catch((err) => {
-                    console.error(
-                        `error decoding image ${img.src}:`,
-                        (err as Error).message,
-                    );
-                });
-        });
-
-        const total = imgs!.length
-        let loaded = 0
-
-        const update_process = () =>{
-          loaded++
-          const percent = Math.floor((loaded/total) * 100)
-          const progress = document.getElementById("progress")
-          const loader = document.getElementById("loader")
-          const content = document.getElementById("img_scroll_area")
-          progress!.textContent = percent.toString()
-
-          if(loaded === total){
-            loader?.classList.add("hidden")
-            content?.classList.remove("hidden")
-            content?.classList.add("flex")
-
-          }
-        }
-
-        for (let img of imgs!){
-          if(img.complete){
-            update_process()
-          } else{
-            img.addEventListener("load", update_process)
-            img.addEventListener("error", () => {
-              console.error(`Image failed to load: ${img.src}`);
-              update_process()
-            });
-          }
-        }
-
-        console.log(`no-one was here\n13am.org`);
-        if ("scrollRestoration" in history) {
-            history.scrollRestoration = "manual";
-        }
-
-        const overview: HTMLAnchorElement = document.getElementById(
-            "overview",
-        ) as HTMLAnchorElement;
-        if (overview) {
-            overview.addEventListener("mouseenter", () => {
-                const url = overview.href;
-                if (!url) return;
-
-                const prefetch = document.createElement("link");
-                const is_prefetch_link =
-                    document.getElementById("prefetch_link");
-                if (!is_prefetch_link) document.head.appendChild(prefetch);
-                prefetch.id = "prefetch_link";
-                prefetch.rel = "prefetch";
-                prefetch.href = url;
-            });
-        }
-
-        const params: URLSearchParams = new URLSearchParams(
-            window.location.search,
-        );
-        const index: number = parseInt(params.get("img") || "0");
-
-        const bg_blured: NodeListOf<Element> =
-            document.querySelectorAll("#bg_blured");
-
-        bg_blured[index].scrollIntoView({
-            behavior: "instant",
-            block: "center",
-        });
-
-
-        let ticking: boolean = false;
-        function check_elements() {
-            const middle_screen: number = window.innerHeight / 2;
-
-            bg_blured.forEach((bg) => {
-                const rect: DOMRect = bg.getBoundingClientRect();
-
-                if (rect.top <= middle_screen && rect.bottom >= middle_screen) {
-                    bg.classList.remove("backdrop-blur-sm");
-                } else {
-                    bg.classList.add("backdrop-blur-sm");
-                }
-            });
-            ticking = false;
-        }
-
-        function on_scroll() {
-            if (!ticking) {
-                requestAnimationFrame(check_elements);
-                ticking = true;
-            }
-        }
-
-        if (window) {
-            bg_blured[0].classList.remove("backdrop-blur-sm");
-            window.addEventListener("scroll", on_scroll);
-        }
-
-        window.addEventListener("load", () => {
-            imgs?.forEach((img) => {
-                img.decode()
-                    .then(() => {
-                        img.setAttribute("decoded", "true");
-                    })
-                    .catch((err) => {
-                        console.error(
-                            `error decoding image ${img.src}:`,
-                            (err as Error).message,
-                        );
-                    });
-            });
-        });
+    imgs?.forEach((img) => {
+      img.decode().then(() => {
+        img.setAttribute("decoded", "true");
+      }).catch((err) => {
+        console.error(`Error decoding image ${img.src}:`, (err as Error).message);
+      });
     });
+
+    let loaded = 0;
+    const total = images?.length || 0;
+
+    const updateProgress = () => {
+      if (loaded <= total) {
+        progress!.textContent = Math.floor((loaded / total) * 100).toString();
+        console.log(`Total: ${total}, Loaded: ${loaded}`);
+
+        if (loaded === total) {
+          if (loader) loader.style.display = "none";
+          if (content) content.style.visibility = "visible";
+        }
+      }
+    };
+
+    const handleImageLoad = (img: HTMLImageElement) => {
+      img.onload = () => {
+        loaded++;
+        console.log(`Image loaded: ${img.src}`);
+        updateProgress();
+      };
+
+      img.onerror = () => {
+        console.error(`Image failed to load: ${img.src}`);
+        loaded++;
+        updateProgress();
+      };
+
+      if (img.complete) {
+        loaded++;
+        updateProgress();
+      }
+    };
+
+    imgs?.forEach(handleImageLoad);
+
+    imgs?.forEach((img) => {
+      if (img.complete) {
+        loaded++;
+        updateProgress();
+      }
+    });
+
+    const overview = document.getElementById("overview") as HTMLAnchorElement;
+    if (overview) {
+      overview.addEventListener("mouseenter", () => {
+        const url = overview.href;
+        if (url) {
+          const prefetch = document.createElement("link");
+          prefetch.id = "prefetch_link";
+          prefetch.rel = "prefetch";
+          prefetch.href = url;
+          if (!document.getElementById("prefetch_link")) {
+            document.head.appendChild(prefetch);
+          }
+        }
+      });
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const index = parseInt(params.get("img") || "0", 10);
+
+    const bgBlured = document.querySelectorAll("#bg_blured");
+    bgBlured[index]?.scrollIntoView({ behavior: "instant", block: "center" });
+
+    let ticking = false;
+
+    const checkElements = () => {
+      const middleScreen = window.innerHeight / 2;
+
+      bgBlured.forEach((bg) => {
+        const rect = bg.getBoundingClientRect();
+        if (rect.top <= middleScreen && rect.bottom >= middleScreen) {
+          bg.classList.remove("backdrop-blur-sm");
+        } else {
+          bg.classList.add("backdrop-blur-sm");
+        }
+      });
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(checkElements);
+        ticking = true;
+      }
+    };
+
+    if (bgBlured.length > 0) {
+      bgBlured[0].classList.remove("backdrop-blur-sm");
+      window.addEventListener("scroll", onScroll);
+    }
+
+
+  });
 </script>
