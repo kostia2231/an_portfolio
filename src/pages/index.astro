@@ -61,12 +61,13 @@ const img_urls = imgs.map((img) => img.transformed_url);
             class="flex flex-nowrap flex-col justify-center gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit"
         >
             {
-                img_urls.map((url) => {
+                img_urls.map((url, index) => {
                     return (
                         <div class="relative w-fit" id="img_group">
                             <div
+                                data-index={index}
                                 id="bg_blured"
-                                class="absolute w-full inset-0 z-10 transition-all backdrop-blur-sm duration-700 ease-in-out handle_blur rounded-xs"
+                                class="absolute w-full inset-0 z-10 transition-all backdrop-blur-sm duration-700 ease-in-out rounded-xs"
                             />
                             <img
                                 loading="eager"
