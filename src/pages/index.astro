@@ -109,12 +109,10 @@ document.addEventListener("DOMContentLoaded", () => {
         loader!.style.display = "none";
         content!.style.visibility = "visible";
 
-        // Даем браузеру полностью отрисовать DOM перед проверкой
         window.scrollTo(0, 0);
 
-        // Используем requestIdleCallback, если доступен
         const finishSetup = () => {
-          checkElements(); // Точное позиционирование
+          checkElements();
         };
 
         if ('requestIdleCallback' in window) {
@@ -140,20 +138,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   imgs?.forEach((img) => {
     if (img instanceof HTMLImageElement) {
-      img.decode?.()
-        .then(() => {
-          img.setAttribute("decoded", "true");
-          handleImageLoad(img);
-        })
-        .catch(() => {
-          handleImageLoad(img);
-        });
+      img.onload = () => {
+        handleImageLoad(img);
+      };
+      img.onerror = () => {
+        handleImageLoad(img);
+      };
 
-      if (img.complete) {
+      if (img.complete && img.naturalWidth !== 0) {
         handleImageLoad(img);
       }
     }
   });
+
 
   const checkElements = () => {
     const middleScreen = window.innerHeight / 2;
