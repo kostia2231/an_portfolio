@@ -116,6 +116,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // Используем requestIdleCallback, если доступен
         const finishSetup = () => {
           checkElements(); // Точное позиционирование
+          bgBlured.forEach((bg) => {
+            if (!bg.classList.contains("backdrop-blur-sm")) {
+              bg.classList.add("backdrop-blur-sm");
+            }
+          });
         };
 
         if ('requestIdleCallback' in window) {
@@ -172,18 +177,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("scroll", onScroll);
 
-  // const overview = document.getElementById("overview");
-  // if (overview instanceof HTMLAnchorElement) {
-  //   overview.addEventListener("mouseenter", () => {
-  //     const url = overview.href;
-  //     if (url && !document.getElementById("prefetch_link")) {
-  //       const prefetch = document.createElement("link");
-  //       prefetch.id = "prefetch_link";
-  //       prefetch.rel = "prefetch";
-  //       prefetch.href = url;
-  //       document.head.appendChild(prefetch);
-  //     }
-  //   });
-  // }
+  const overview = document.getElementById("overview");
+  if (overview instanceof HTMLAnchorElement) {
+    overview.addEventListener("mouseenter", () => {
+      const url = overview.href;
+      if (url && !document.getElementById("prefetch_link")) {
+        const prefetch = document.createElement("link");
+        prefetch.id = "prefetch_link";
+        prefetch.rel = "prefetch";
+        prefetch.href = url;
+        document.head.appendChild(prefetch);
+      }
+    });
+  }
 });
 </script>
