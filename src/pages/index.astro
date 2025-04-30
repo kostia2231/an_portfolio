@@ -63,6 +63,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             {
                 img_urls.map((url, index) => {
                     return (
+                    <div>{index}</div>
                         <div class="relative w-fit" id="img_group">
                             <div
                                 data-index={index}
