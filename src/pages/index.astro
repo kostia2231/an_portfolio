@@ -46,7 +46,9 @@ const img_urls = imgs.map((img) => img.transformed_url);
         </div>
     </div>
     <div id="loader" class="flex">
-        <p class="m-auto mt-[50vh] max-[500px]:mt-[49vh]"><span id="progress">0</span>%</p>
+        <p class="m-auto mt-[50vh] max-[500px]:mt-[49vh]">
+            <span id="progress">0</span>%
+        </p>
     </div>
 
     <!-- <div id="content" style="visibility: hidden;"> -->
@@ -63,13 +65,11 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     return (
                         <div class="relative w-fit" id="img_group">
                             <div
-                                data-={index}
                                 id="bg_blured"
                                 class="absolute w-full inset-0 z-10 transition-all backdrop-blur-sm duration-700 ease-in-out handle_blur rounded-xs"
                             />
                             <img
                                 loading="eager"
-                                decoding="async"
                                 id="img_static"
                                 src={url}
                                 alt="img"
@@ -81,7 +81,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }
         </div>
     </div>
-<!-- </div> -->
+    <!-- </div> -->
 </div>
 
 <!-- <script>
