@@ -30,7 +30,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
 <div class="text-[12px] bg-white">
     <div
-        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-gray-400 max-[500px]:mt-[49vh] mix-blend-difference z-30 max-w-[1440px]"
+        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[49vh] mix-blend-difference z-30 max-w-[1440px]"
     >
         <div class="flex justify-between">
             <div class="handle_from_left">
@@ -55,6 +55,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
             </div>
         </div>
     </div>
+    <div id="loader" class="flex">
+        <p class="m-auto mt-[50vh]"><span id="progress">0</span>%</p>
+    </div>
+    <div id="content" class="hidden">
     <div
         class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
         id="img_scroll_area"
@@ -86,11 +90,44 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }
         </div>
     </div>
+    </div>
     <!-- <script src="../scripts/index.js"></script> -->
 </div>
 
 <script>
+
+
     document.addEventListener("DOMContentLoaded", async () => {
+
+        const images = document.images
+        const total = images.length
+        let loaded = 0
+        const update_process = () =>{
+          loaded++
+          const percent = Math.floor((loaded/total) * 100)
+          const progress = document.getElementById("progress")
+          const loader = document.getElementById("loader")
+          const content = document.getElementById("content")
+          progress!.textContent = percent.toString()
+
+          if(loaded === total){
+            loader?.classList.add("hidden")
+            content?.classList.remove("hidden")
+          }
+        }
+
+        for (let img of images){
+          if(img.complete){
+            update_process()
+          } else{
+            img.addEventListener("load", update_process)
+            img.addEventListener("error", () => {
+              console.error(`Image failed to load: ${img.src}`);
+              update_process()
+            });
+          }
+        }
+
         console.log(`no-one was here\n13am.org`);
         if ("scrollRestoration" in history) {
             history.scrollRestoration = "manual";
