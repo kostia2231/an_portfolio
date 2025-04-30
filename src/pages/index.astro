@@ -67,14 +67,14 @@ const img_urls = imgs.map((img) => img.transformed_url);
                             <div
                                 data-index={index}
                                 id="bg_blured"
-                                class="absolute w-full inset-0 z-10 transition-all duration-700 ease-in-out rounded-xs"
+                                class="absolute w-full inset-0 transition-all duration-700 ease-in-out rounded-xs"
                             />
                             <img
                                 loading="eager"
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] "
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh]"
                             />
                         </div>
                     );
@@ -97,7 +97,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
         bgBlured.forEach((item, index) => {
             progress!.textContent = index.toString();
             if (index >= 1) {
-                item.classList.add("blurr");
+                item.classList.add("backdrop-blur-sm");
             }
         });
     });
