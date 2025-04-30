@@ -98,10 +98,31 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
 
     document.addEventListener("DOMContentLoaded", async () => {
+        const img_wrapper: HTMLElement | null =
+            document.getElementById("img_wrapper");
+
+        const imgs: NodeListOf<HTMLImageElement> | undefined =
+            img_wrapper?.querySelectorAll<HTMLImageElement>(
+                "img[id=img_static]",
+            );
+
+        imgs?.forEach((img) => {
+            img.decode()
+                .then(() => {
+                    img.setAttribute("decoded", "true");
+                })
+                .catch((err) => {
+                    console.error(
+                        `error decoding image ${img.src}:`,
+                        (err as Error).message,
+                    );
+                });
+        });
 
         const images = document.images
         const total = images.length
         let loaded = 0
+
         const update_process = () =>{
           loaded++
           const percent = Math.floor((loaded/total) * 100)
@@ -164,13 +185,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
             block: "center",
         });
 
-        const img_wrapper: HTMLElement | null =
-            document.getElementById("img_wrapper");
-
-        const imgs: NodeListOf<HTMLImageElement> | undefined =
-            img_wrapper?.querySelectorAll<HTMLImageElement>(
-                "img[id=img_static]",
-            );
 
         let ticking: boolean = false;
         function check_elements() {
