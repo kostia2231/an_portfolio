@@ -87,9 +87,18 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+        if ("scrollRestoration" in history) {
+            history.scrollRestoration = "manual";
+        }
+
         const bgBlured = document.querySelectorAll("#bg_blured");
-        bgBlured.forEach((bgBlured) => {
-            bgBlured.classList.add("backdrop-blur-sm");
+        const progress = document.getElementById("progress");
+
+        bgBlured.forEach((item, index) => {
+            progress!.textContent = index.toString();
+            if (index >= 1) {
+                item.classList.add("backdrop-blur-sm");
+            }
         });
     });
 </script>
