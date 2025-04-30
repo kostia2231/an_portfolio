@@ -37,15 +37,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 <p>Anastasia Potapova</p>
             </div>
             <div class="flex gap-4 handle_from_right">
-                <!-- <div class="flex gap-1">
-                    <a href="/overview" id="overview">
-                        <p
-                            class="cursor-pointer max-[500px]:hidden hover:opacity-50"
-                        >
-                            Overview
-                        </p></a
-                    >
-                </div> -->
                 <a href="https://www.instagram.com/ana.sta.sea/">
                     <p class="cursor-pointer hover:opacity-50">Instagram</p>
                 </a>
@@ -92,7 +83,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
         </div>
     </div>
 </div>
-    <!-- <script src="../scripts/index.js"></script> -->
 </div>
 
 <script>
@@ -125,7 +115,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       loaded++;
       updateProgress();
     };
-
     img.onerror = () => {
       loaded++;
       updateProgress();
@@ -156,8 +145,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   const bgBlured = document.querySelectorAll("#bg_blured");
-
-  let ticking = false;
+  // let ticking = false;
 
   const checkElements = () => {
     const middleScreen = window.innerHeight / 2;
@@ -171,14 +159,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    ticking = false;
+    // ticking = false;
   };
 
   const onScroll = () => {
-    if (!ticking) {
+    // if (!ticking) {
       requestAnimationFrame(checkElements);
-      ticking = true;
-    }
+      // ticking = true;
+    // }
   };
 
   if (bgBlured.length > 0) {
