@@ -97,11 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const progress = document.getElementById("progress");
   const loader = document.getElementById("loader");
   const content = document.getElementById("content");
-  const bgBlured = document.querySelectorAll("#bg_blured");
-
-  bgBlured.forEach(bg => {
-    bg.classList.add("backdrop-blur-sm");
-  });
 
   let loaded = 0;
   const total = images?.length || 0;
@@ -162,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const checkElements = () => {
     const middleScreen = window.innerHeight / 2;
-
+    const bgBlured = document.querySelectorAll("#bg_blured");
     bgBlured.forEach((bg) => {
       const rect = bg.getBoundingClientRect();
       const isInCenter = rect.top <= middleScreen && rect.bottom >= middleScreen;
