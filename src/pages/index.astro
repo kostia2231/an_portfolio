@@ -26,6 +26,18 @@ const img_urls = imgs.map((img) => img.transformed_url);
 </head>
 <div class="text-[12px] bg-white">
     <div
+        class="mt-4 fixed w-screen z-30 mix-blend-difference text-white max-[500px]:hidden handle_from_top"
+    >
+        <div class="text-center">
+            <a href="/2" class="cursor-pointer hover:opacity-50">View</a>
+        </div>
+    </div>
+    <div
+        class="mb-4 fixed w-screen z-30 mix-blend-difference text-white bottom-0 handle_from_bottom"
+    >
+        <div class="text-center">©2025</div>
+    </div>
+    <div
         class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[49vh] mix-blend-difference z-30 max-w-[1440px]"
         id="middle"
     >
@@ -48,6 +60,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             <span id="progress">0</span>%
         </p>
     </div>
+
     <div id="content" style="visibility: hidden;">
         <div
             class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
@@ -55,7 +68,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
         >
             <div
                 id="img_wrapper"
-                class="flex flex-nowrap flex-col justify-center gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit"
+                class="flex flex-nowrap flex-col justify-center gap-2 max-[500px]:gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit min-[500px]:pt-8 pb-8 max-[500px]:pb-12"
             >
                 {
                     img_urls.map((url) => (

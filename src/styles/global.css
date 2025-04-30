@@ -13,6 +13,7 @@ html * {
 }
 
 html {
+    background-color: white;
     scroll-behavior: smooth;
     scrollbar-width: none;
 }
@@ -50,9 +51,41 @@ html::-webkit-scrollbar {
     will-change: transform;
 }
 
+@keyframes from_top {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes from_bottom {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.handle_from_top {
+    animation: from_top 0.6s ease-in-out forwards;
+    will-change: transform;
+}
+
+.handle_from_bottom {
+    animation: from_bottom 0.6s ease-in-out forwards;
+    will-change: transform;
+}
+
 @keyframes from_left {
     0% {
-        transform: translateX(-200px);
+        transform: translateX(-100%);
         opacity: 0;
     }
 
@@ -64,7 +97,7 @@ html::-webkit-scrollbar {
 
 @keyframes from_right {
     0% {
-        transform: translateX(200px);
+        transform: translateX(100%);
         opacity: 0;
     }
     100% {
