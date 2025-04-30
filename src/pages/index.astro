@@ -86,7 +86,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if ("scrollRestoration" in history) {
     history.scrollRestoration = "manual";
   }
@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const progress = document.getElementById("progress");
   const loader = document.getElementById("loader");
   const content = document.getElementById("content");
+  const bgBlured = document.querySelectorAll("#bg_blured");
 
   let loaded = 0;
   const total = images?.length || 0;
@@ -104,36 +105,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const updateProgress = () => {
     if (loaded <= total) {
       progress!.textContent = Math.floor((loaded / total) * 100).toString();
-
       if (loaded === total) {
-        loader!.style.display = "none";
-        content!.style.visibility = "visible";
-
-        window.scrollTo(0, 0);
-
-        const finishSetup = () => {
-          checkElements();
-        };
-
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(finishSetup, { timeout: 200 });
-        } else {
-          setTimeout(finishSetup, 100);
-        }
+        if (loader) loader.style.display = "none";
+        if (content) content.style.visibility = "visible";
       }
     }
   };
 
   const handleImageLoad = (img) => {
-    const inc = () => {
+    img.onload = () => {
       loaded++;
       updateProgress();
     };
-
-    img.onload = inc;
-    img.onerror = inc;
-
-    if (img.complete) inc();
+    img.onerror = () => {
+      loaded++;
+      updateProgress();
+    };
+    if (img.complete) {
+      loaded++;
+      updateProgress();
+    }
   };
 
   imgs?.forEach((img) => {
@@ -145,29 +136,41 @@ document.addEventListener("DOMContentLoaded", () => {
         handleImageLoad(img);
       };
 
+      // Если изображение уже загружено (например, из кэша)
       if (img.complete && img.naturalWidth !== 0) {
         handleImageLoad(img);
       }
     }
   });
 
-
-  const checkElements = () => {
-    const middleScreen = window.innerHeight / 2;
-    const bgBlured = document.querySelectorAll("#bg_blured");
-    bgBlured.forEach((bg) => {
-      const rect = bg.getBoundingClientRect();
-      const isInCenter = rect.top <= middleScreen && rect.bottom >= middleScreen;
-      bg.classList.toggle("backdrop-blur-sm", !isInCenter);
-
+  // Функция для обработки блюра
+  const checkElements = (entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove("backdrop-blur-sm");
+      } else {
+        entry.target.classList.add("backdrop-blur-sm");
+      }
     });
   };
 
-  const onScroll = () => {
-    requestAnimationFrame(checkElements);
+  const observerOptions = {
+    root: null, // Используем viewport как root
+    rootMargin: "0px", // Можно настроить смещение, если нужно
+    threshold: 0.5 // Элемент должен быть на 50% виден, чтобы сработал observer
   };
 
-  // window.addEventListener("scroll", onScroll);
+  const observer = new IntersectionObserver(checkElements, observerOptions);
+
+  bgBlured.forEach((bg) => {
+    observer.observe(bg);
+  });
+
+  const onScroll = () => {
+    // Реализовано через IntersectionObserver, поэтому обработка на scroll больше не требуется.
+  };
+
+  window.addEventListener("scroll", onScroll);
 
   const overview = document.getElementById("overview");
   if (overview instanceof HTMLAnchorElement) {
