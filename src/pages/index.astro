@@ -116,11 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Используем requestIdleCallback, если доступен
         const finishSetup = () => {
           checkElements(); // Точное позиционирование
-          bgBlured.forEach((bg) => {
-            if (!bg.classList.contains("backdrop-blur-sm")) {
-              bg.classList.add("backdrop-blur-sm");
-            }
-          });
         };
 
         if ('requestIdleCallback' in window) {
@@ -168,6 +163,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const rect = bg.getBoundingClientRect();
       const isInCenter = rect.top <= middleScreen && rect.bottom >= middleScreen;
       bg.classList.toggle("backdrop-blur-sm", !isInCenter);
+      if(!isInCenter){
+        bg.classList.add("backdrop-blur-sm")
+      }
     });
   };
 
