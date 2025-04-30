@@ -1,11 +1,9 @@
 ---
 import "../styles/global.css";
-
 type Image = {
     url: string;
     transformed_url: string;
 };
-
 const res = await fetch(
     "https://subtle-palmier-ae368e.netlify.app/api/data.json",
 );
@@ -26,7 +24,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
         rel="stylesheet"
     />
 </head>
-
 <div class="text-[12px] bg-white">
     <div
         class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[49vh] mix-blend-difference z-30 max-w-[1440px]"
@@ -50,8 +47,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
             <span id="progress">0</span>%
         </p>
     </div>
-
-    <!-- <div id="content" style="visibility: hidden;"> -->
     <div
         class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
         id="img_scroll_area"
@@ -61,143 +56,46 @@ const img_urls = imgs.map((img) => img.transformed_url);
             class="flex flex-nowrap flex-col justify-center gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit"
         >
             {
-                img_urls.map((url, index) => {
-                    return (
-                    <div>{index}</div>
-                        <div class="relative w-fit" id="img_group">
-                            <div
-                                data-index={index}
-                                id="bg_blured"
-                                class="absolute w-full inset-0 transition-all backdrop-blur-sm duration-700 ease-in-out rounded-xs"
-                            />
-                            <img
-                                id="img_static"
-                                src={url}
-                                alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh]"
-                            />
-                        </div>
-                    );
-                })
+                img_urls.map((url, index) => (
+                    <div class="relative w-fit" id="img_group">
+                        <div
+                            data-index={index}
+                            id="bg_blured"
+                            class="absolute w-full h-full inset-0 transition-all backdrop-blur-sm duration-700 ease-in-out rounded-xs"
+                        />
+                        <img
+                            id="img_static"
+                            src={url}
+                            alt="img"
+                            class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh]"
+                        />
+                    </div>
+                ))
             }
         </div>
     </div>
-    <!-- </div> -->
 </div>
 
 <!-- <script>
+    // Add JavaScript to ensure blur effect works consistently
     document.addEventListener("DOMContentLoaded", () => {
-        if ("scrollRestoration" in history) {
-            history.scrollRestoration = "manual";
-        }
+        const bgBlurs = document.querySelectorAll("#bg_blured");
 
-        const bgBlured = document.querySelectorAll("#bg_blured");
-        const progress = document.getElementById("progress");
-
-        bgBlured.forEach((item, index) => {
-            progress!.textContent = index.toString();
-            if (index >= 1) {
-                item.classList.add("backdrop-blur-sm");
-            }
+        // Make sure all blur divs have proper height
+        bgBlurs.forEach((blur) => {
+            const parentHeight =
+                blur.parentElement.querySelector("#img_static").offsetHeight;
+            blur.style.height = `${parentHeight}px`;
         });
+
+        // Fix for Chrome mobile - force repaint
+        setTimeout(() => {
+            bgBlurs.forEach((blur) => {
+                blur.style.opacity = "0.99";
+                setTimeout(() => {
+                    blur.style.opacity = "1";
+                }, 10);
+            });
+        }, 100);
     });
-</script> -->
-<!-- <script>
-document.addEventListener("DOMContentLoaded", () => {
-  if ("scrollRestoration" in history) {
-    history.scrollRestoration = "manual";
-  }
-
-  const imgWrapper = document.getElementById("img_wrapper");
-  const imgs = imgWrapper?.querySelectorAll("img[id=img_static]");
-  const images = document.images;
-  const progress = document.getElementById("progress");
-  const loader = document.getElementById("loader");
-  const content = document.getElementById("content");
-
-  let loaded = 0;
-  const total = images?.length || 0;
-
-  const updateProgress = () => {
-    if (loaded <= total) {
-      progress!.textContent = Math.floor((loaded / total) * 100).toString();
-
-      if (loaded === total) {
-        loader!.style.display = "none";
-        content!.style.visibility = "visible";
-
-        window.scrollTo(0, 0);
-
-        const finishSetup = () => {
-          checkElements();
-        };
-
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(finishSetup, { timeout: 200 });
-        } else {
-          setTimeout(finishSetup, 100);
-        }
-      }
-    }
-  };
-
-  const handleImageLoad = (img) => {
-    const inc = () => {
-      loaded++;
-      updateProgress();
-    };
-
-    img.onload = inc;
-    img.onerror = inc;
-
-    if (img.complete) inc();
-  };
-
-  imgs?.forEach((img) => {
-    if (img instanceof HTMLImageElement) {
-      img.onload = () => {
-        handleImageLoad(img);
-      };
-      img.onerror = () => {
-        handleImageLoad(img);
-      };
-
-      if (img.complete && img.naturalWidth !== 0) {
-        handleImageLoad(img);
-      }
-    }
-  });
-
-
-  const checkElements = () => {
-    const middleScreen = window.innerHeight / 2;
-    const bgBlured = document.querySelectorAll("#bg_blured");
-    bgBlured.forEach((bg) => {
-      const rect = bg.getBoundingClientRect();
-      const isInCenter = rect.top <= middleScreen && rect.bottom >= middleScreen;
-      bg.classList.toggle("backdrop-blur-sm", !isInCenter);
-
-    });
-  };
-
-  const onScroll = () => {
-    requestAnimationFrame(checkElements);
-  };
-
-  // window.addEventListener("scroll", onScroll);
-
-  const overview = document.getElementById("overview");
-  if (overview instanceof HTMLAnchorElement) {
-    overview.addEventListener("mouseenter", () => {
-      const url = overview.href;
-      if (url && !document.getElementById("prefetch_link")) {
-        const prefetch = document.createElement("link");
-        prefetch.id = "prefetch_link";
-        prefetch.rel = "prefetch";
-        prefetch.href = url;
-        document.head.appendChild(prefetch);
-      }
-    });
-  }
-});
 </script> -->
