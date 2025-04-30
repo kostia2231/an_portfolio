@@ -68,7 +68,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                             <div
                                 data-index={index}
                                 id="bg_blured"
-                                class="absolute w-full inset-0 transition-all duration-700 ease-in-out rounded-xs"
+                                class="absolute w-full inset-0 transition-all backdrop-blur-sm duration-700 ease-in-out rounded-xs"
                             />
                             <img
                                 id="img_static"
@@ -85,7 +85,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
     <!-- </div> -->
 </div>
 
-<script>
+<!-- <script>
     document.addEventListener("DOMContentLoaded", () => {
         if ("scrollRestoration" in history) {
             history.scrollRestoration = "manual";
@@ -101,7 +101,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }
         });
     });
-</script>
+</script> -->
 <!-- <script>
 document.addEventListener("DOMContentLoaded", () => {
   if ("scrollRestoration" in history) {
