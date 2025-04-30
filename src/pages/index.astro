@@ -106,11 +106,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let loaded = 0;
   const total = images?.length || 0;
-
   const updateProgress = () => {
     if (loaded <= total) {
       progress!.textContent = Math.floor((loaded / total) * 100).toString();
-      console.log(`Total: ${total}, Loaded: ${loaded}`);
       if (loaded === total) {
         if (loader) loader.style.display = "none";
         if (content) content.style.visibility = "visible";
@@ -121,12 +119,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const handleImageLoad = (img: HTMLImageElement) => {
     img.onload = () => {
       loaded++;
-      console.log(`Image loaded: ${img.src}`);
       updateProgress();
     };
 
     img.onerror = () => {
-      console.error(`Image failed to load: ${img.src}`);
       loaded++;
       updateProgress();
     };
@@ -186,12 +182,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.addEventListener("scroll", onScroll);
   }
 
-  const params = new URLSearchParams(window.location.search);
-  const index = parseInt(params.get("img") || "0", 10);
-  if (bgBlured.length > 0) {
-    const targetBg = bgBlured[index] || bgBlured[0];
-    targetBg.scrollIntoView({ behavior: "smooth", block: "center" });
-  }
+  // const params = new URLSearchParams(window.location.search);
+  // const index = parseInt(params.get("img") || "0", 10);
+  // if (bgBlured.length > 0) {
+  //   const targetBg = bgBlured[index] || bgBlured[0];
+  //   targetBg.scrollIntoView({ behavior: "smooth", block: "center" });
+  // }
 
   const overview = document.getElementById("overview") as HTMLAnchorElement;
   if (overview) {
