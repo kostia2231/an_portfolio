@@ -145,7 +145,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   const bgBlured = document.querySelectorAll("#bg_blured");
-  // let ticking = false;
 
   const checkElements = () => {
     const middleScreen = window.innerHeight / 2;
@@ -158,20 +157,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         bg.classList.add("backdrop-blur-sm");
       }
     });
-
-    // ticking = false;
   };
 
   const onScroll = () => {
-    // if (!ticking) {
       requestAnimationFrame(checkElements);
-      // ticking = true;
-    // }
   };
 
-  if (bgBlured.length > 0) {
+  if (bgBlured) {
     bgBlured[0].classList.remove("backdrop-blur-sm");
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("wheel", onScroll);
   }
 
   // const params = new URLSearchParams(window.location.search);
