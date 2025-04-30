@@ -27,6 +27,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
 <div class="text-[12px] bg-white">
     <div
         class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[49vh] mix-blend-difference z-30 max-w-[1440px]"
+        id="middle"
     >
         <div class="flex justify-between">
             <div class="handle_from_left">
@@ -91,12 +92,16 @@ const img_urls = imgs.map((img) => img.transformed_url);
             const total = images.length;
 
             const checkElements = () => {
-                const middleScreen = window.innerHeight / 2;
+                const middleZoneHeight = window.innerHeight * 0.3;
+                const middleTop = window.innerHeight / 2 - middleZoneHeight / 2;
+                const middleBottom =
+                    window.innerHeight / 2 + middleZoneHeight / 2;
 
                 imgs?.forEach((i) => {
                     const rect = i.getBoundingClientRect();
                     const isInCenter =
-                        rect.top <= middleScreen && rect.bottom >= middleScreen;
+                        rect.top < middleBottom && rect.bottom > middleTop;
+
                     i.classList.toggle("blur-sm", !isInCenter);
                     i.classList.toggle("scale-[1.1]", !isInCenter);
                 });
