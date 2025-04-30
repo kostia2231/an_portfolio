@@ -97,6 +97,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
   const imgWrapper = document.getElementById("img_wrapper");
   const imgs = imgWrapper?.querySelectorAll("img[id=img_static]");
   const images = document.images;
