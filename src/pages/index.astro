@@ -51,136 +51,135 @@ const img_urls = imgs.map((img) => img.transformed_url);
         </p>
     </div>
 
-    <div id="content" style="visibility: hidden;">
+    <!-- <div id="content" style="visibility: hidden;"> -->
+    <div
+        class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
+        id="img_scroll_area"
+    >
         <div
-            class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
-            id="img_scroll_area"
+            id="img_wrapper"
+            class="flex flex-nowrap flex-col justify-center gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit"
         >
-            <div
-                id="img_wrapper"
-                class="flex flex-nowrap flex-col justify-center gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit"
-            >
-                {
-                    img_urls.map((url) => {
-                        return (
-                            <div class="relative w-fit" id="img_group">
-                                <div
-                                    id="bg_blured"
-                                    class="absolute w-full inset-0 z-10 transition-all backdrop-blur-sm duration-700 ease-in-out handle_blur rounded-xs"
-                                />
-                                <img
-                                    loading="eager"
-                                    id="img_static"
-                                    src={url}
-                                    alt="img"
-                                    class="max-[500px]:h-auto max-[500px]:w-full object-cover handle_blur rounded-xs h-[75vh] "
-                                />
-                            </div>
-                        );
-                    })
-                }
-            </div>
+            {
+                img_urls.map((url) => {
+                    return (
+                        <div class="relative w-fit" id="img_group">
+                            <div
+                                id="bg_blured"
+                                class="absolute w-full inset-0 z-10 transition-all backdrop-blur-sm duration-700 ease-in-out handle_blur rounded-xs"
+                            />
+                            <img
+                                loading="eager"
+                                id="img_static"
+                                src={url}
+                                alt="img"
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover handle_blur rounded-xs h-[75vh] "
+                            />
+                        </div>
+                    );
+                })
+            }
         </div>
     </div>
+    <!-- </div> -->
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        if ("scrollRestoration" in history) {
-            history.scrollRestoration = "manual";
+<!-- <script>
+document.addEventListener("DOMContentLoaded", () => {
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
+  const imgWrapper = document.getElementById("img_wrapper");
+  const imgs = imgWrapper?.querySelectorAll("img[id=img_static]");
+  const images = document.images;
+  const progress = document.getElementById("progress");
+  const loader = document.getElementById("loader");
+  const content = document.getElementById("content");
+
+  let loaded = 0;
+  const total = images?.length || 0;
+
+  const updateProgress = () => {
+    if (loaded <= total) {
+      progress!.textContent = Math.floor((loaded / total) * 100).toString();
+
+      if (loaded === total) {
+        loader!.style.display = "none";
+        content!.style.visibility = "visible";
+
+        window.scrollTo(0, 0);
+
+        const finishSetup = () => {
+          checkElements();
+        };
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(finishSetup, { timeout: 200 });
+        } else {
+          setTimeout(finishSetup, 100);
         }
+      }
+    }
+  };
 
-        const imgWrapper = document.getElementById("img_wrapper");
-        const imgs = imgWrapper?.querySelectorAll("img[id=img_static]");
-        const images = document.images;
-        const progress = document.getElementById("progress");
-        const loader = document.getElementById("loader");
-        const content = document.getElementById("content");
+  const handleImageLoad = (img) => {
+    const inc = () => {
+      loaded++;
+      updateProgress();
+    };
 
-        let loaded = 0;
-        const total = images?.length || 0;
+    img.onload = inc;
+    img.onerror = inc;
 
-        const updateProgress = () => {
-            if (loaded <= total) {
-                progress!.textContent = Math.floor(
-                    (loaded / total) * 100,
-                ).toString();
+    if (img.complete) inc();
+  };
 
-                if (loaded === total) {
-                    loader!.style.display = "none";
-                    content!.style.visibility = "visible";
+  imgs?.forEach((img) => {
+    if (img instanceof HTMLImageElement) {
+      img.onload = () => {
+        handleImageLoad(img);
+      };
+      img.onerror = () => {
+        handleImageLoad(img);
+      };
 
-                    window.scrollTo(0, 0);
+      if (img.complete && img.naturalWidth !== 0) {
+        handleImageLoad(img);
+      }
+    }
+  });
 
-                    const finishSetup = () => {
-                        checkElements();
-                    };
 
-                    if ("requestIdleCallback" in window) {
-                        requestIdleCallback(finishSetup, { timeout: 200 });
-                    } else {
-                        setTimeout(finishSetup, 100);
-                    }
-                }
-            }
-        };
+  const checkElements = () => {
+    const middleScreen = window.innerHeight / 2;
+    const bgBlured = document.querySelectorAll("#bg_blured");
+    bgBlured.forEach((bg) => {
+      const rect = bg.getBoundingClientRect();
+      const isInCenter = rect.top <= middleScreen && rect.bottom >= middleScreen;
+      bg.classList.toggle("backdrop-blur-sm", !isInCenter);
 
-        const handleImageLoad = (img) => {
-            const inc = () => {
-                loaded++;
-                updateProgress();
-            };
-
-            img.onload = inc;
-            img.onerror = inc;
-
-            if (img.complete) inc();
-        };
-
-        imgs?.forEach((img) => {
-            if (img instanceof HTMLImageElement) {
-                img.onload = () => {
-                    handleImageLoad(img);
-                };
-                img.onerror = () => {
-                    handleImageLoad(img);
-                };
-
-                if (img.complete && img.naturalWidth !== 0) {
-                    handleImageLoad(img);
-                }
-            }
-        });
-
-        const checkElements = () => {
-            const middleScreen = window.innerHeight / 2;
-            const bgBlured = document.querySelectorAll("#bg_blured");
-            bgBlured.forEach((bg) => {
-                const rect = bg.getBoundingClientRect();
-                const isInCenter =
-                    rect.top <= middleScreen && rect.bottom >= middleScreen;
-                bg.classList.toggle("backdrop-blur-sm", !isInCenter);
-            });
-        };
-
-        const onScroll = () => {
-            requestAnimationFrame(checkElements);
-        };
-
-        window.addEventListener("scroll", onScroll);
-
-        const overview = document.getElementById("overview");
-        if (overview instanceof HTMLAnchorElement) {
-            overview.addEventListener("mouseenter", () => {
-                const url = overview.href;
-                if (url && !document.getElementById("prefetch_link")) {
-                    const prefetch = document.createElement("link");
-                    prefetch.id = "prefetch_link";
-                    prefetch.rel = "prefetch";
-                    prefetch.href = url;
-                    document.head.appendChild(prefetch);
-                }
-            });
-        }
     });
-</script>
+  };
+
+  const onScroll = () => {
+    requestAnimationFrame(checkElements);
+  };
+
+  // window.addEventListener("scroll", onScroll);
+
+  const overview = document.getElementById("overview");
+  if (overview instanceof HTMLAnchorElement) {
+    overview.addEventListener("mouseenter", () => {
+      const url = overview.href;
+      if (url && !document.getElementById("prefetch_link")) {
+        const prefetch = document.createElement("link");
+        prefetch.id = "prefetch_link";
+        prefetch.rel = "prefetch";
+        prefetch.href = url;
+        document.head.appendChild(prefetch);
+      }
+    });
+  }
+});
+</script> -->
