@@ -105,13 +105,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const updateProgress = () => {
     if (loaded <= total) {
       progress!.textContent = Math.floor((loaded / total) * 100).toString();
+
       if (loaded === total) {
         if (loader) loader.style.display = "none";
         if (content) content.style.visibility = "visible";
 
+        // Ждем полную отрисовку страницы перед проверкой блюра
         requestAnimationFrame(() => {
-          window.scrollTo(0, 0);
-          checkElements();
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              window.scrollTo(0, 0);
+              checkElements();
+            }, 50);
+          });
         });
       }
     }
@@ -140,7 +146,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           handleImageLoad(img);
         })
         .catch((err) => {
-          console.error(`Error decoding image ${img.src}:`, (err).message);
+          console.error(`Error decoding image ${img.src}:`, err.message);
           handleImageLoad(img);
         });
 
