@@ -86,7 +86,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   if ("scrollRestoration" in history) {
     history.scrollRestoration = "manual";
   }
@@ -107,52 +107,51 @@ document.addEventListener("DOMContentLoaded", async () => {
       progress!.textContent = Math.floor((loaded / total) * 100).toString();
 
       if (loaded === total) {
-        if (loader) loader.style.display = "none";
-        if (content) content.style.visibility = "visible";
+        loader!.style.display = "none";
+        content!.style.visibility = "visible";
 
-        // Ждем полную отрисовку страницы перед проверкой блюра
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            setTimeout(() => {
-              window.scrollTo(0, 0);
-              checkElements();
-            }, 50);
-          });
-        });
+        // Даем браузеру полностью отрисовать DOM перед проверкой
+        window.scrollTo(0, 0);
+
+        // Используем requestIdleCallback, если доступен
+        const finishSetup = () => {
+          checkElements(); // Точное позиционирование
+        };
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(finishSetup, { timeout: 200 });
+        } else {
+          setTimeout(finishSetup, 100);
+        }
       }
     }
   };
 
   const handleImageLoad = (img) => {
-    img.onload = () => {
+    const inc = () => {
       loaded++;
       updateProgress();
     };
-    img.onerror = () => {
-      loaded++;
-      updateProgress();
-    };
-    if (img.complete) {
-      loaded++;
-      updateProgress();
-    }
+
+    img.onload = inc;
+    img.onerror = inc;
+
+    if (img.complete) inc();
   };
 
   imgs?.forEach((img) => {
     if (img instanceof HTMLImageElement) {
-      img.decode()
+      img.decode?.()
         .then(() => {
           img.setAttribute("decoded", "true");
           handleImageLoad(img);
         })
-        .catch((err) => {
-          console.error(`Error decoding image ${img.src}:`, err.message);
+        .catch(() => {
           handleImageLoad(img);
         });
 
       if (img.complete) {
-        loaded++;
-        updateProgress();
+        handleImageLoad(img);
       }
     }
   });
