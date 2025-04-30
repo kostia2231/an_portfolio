@@ -97,20 +97,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   const progress = document.getElementById("progress");
   const loader = document.getElementById("loader");
   const content = document.getElementById("content");
+  const bgBlured = document.querySelectorAll("#bg_blured");
 
   let loaded = 0;
   const total = images?.length || 0;
+
   const updateProgress = () => {
     if (loaded <= total) {
       progress!.textContent = Math.floor((loaded / total) * 100).toString();
       if (loaded === total) {
         if (loader) loader.style.display = "none";
         if (content) content.style.visibility = "visible";
+
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0);
+          checkElements();
+        });
       }
     }
   };
 
-  const handleImageLoad = (img: HTMLImageElement) => {
+  const handleImageLoad = (img) => {
     img.onload = () => {
       loaded++;
       updateProgress();
@@ -144,52 +151,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  const bgBlured = document.querySelectorAll("#bg_blured");
-
   const checkElements = () => {
     const middleScreen = window.innerHeight / 2;
 
     bgBlured.forEach((bg) => {
       const rect = bg.getBoundingClientRect();
-      if (rect.top <= middleScreen && rect.bottom >= middleScreen) {
-        bg.classList.remove("backdrop-blur-sm");
-      } else {
-        bg.classList.add("backdrop-blur-sm");
-      }
+      const isInCenter = rect.top <= middleScreen && rect.bottom >= middleScreen;
+      bg.classList.toggle("backdrop-blur-sm", !isInCenter);
     });
   };
 
   const onScroll = () => {
-      requestAnimationFrame(checkElements);
+    requestAnimationFrame(checkElements);
   };
 
-  if (bgBlured) {
-    // bgBlured[0].classList.remove("backdrop-blur-sm");
-    window.addEventListener("scroll", onScroll);
-  }
+  window.addEventListener("scroll", onScroll);
 
-  // const params = new URLSearchParams(window.location.search);
-  // const index = parseInt(params.get("img") || "0", 10);
-  // if (bgBlured.length > 0) {
-  //   const targetBg = bgBlured[index] || bgBlured[0];
-  //   targetBg.scrollIntoView({ behavior: "smooth", block: "center" });
-  // }
-
-  const overview = document.getElementById("overview") as HTMLAnchorElement;
-  if (overview) {
+  const overview = document.getElementById("overview");
+  if (overview instanceof HTMLAnchorElement) {
     overview.addEventListener("mouseenter", () => {
       const url = overview.href;
-      if (url) {
+      if (url && !document.getElementById("prefetch_link")) {
         const prefetch = document.createElement("link");
         prefetch.id = "prefetch_link";
         prefetch.rel = "prefetch";
         prefetch.href = url;
-        if (!document.getElementById("prefetch_link")) {
-          document.head.appendChild(prefetch);
-        }
+        document.head.appendChild(prefetch);
       }
     });
   }
 });
-
 </script>
