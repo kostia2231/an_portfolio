@@ -29,7 +29,9 @@ const img_urls = imgs.map((img) => img.transformed_url);
         class="mt-4 fixed w-screen z-30 mix-blend-difference text-white max-[500px]:hidden handle_from_top"
     >
         <div class="text-center">
-            <a href="/2" class="cursor-pointer hover:opacity-50">View</a>
+            <a id="view_change_button" class="cursor-pointer hover:opacity-50"
+                >View</a
+            >
         </div>
     </div>
     <div
@@ -38,7 +40,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
         <div class="text-center">©2025</div>
     </div>
     <div
-        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[49vh] mix-blend-difference z-30 max-w-[1440px]"
+        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[49vh] mix-blend-difference z-30 max-w-[1440px] pointer-events-none"
         id="middle"
     >
         <div class="flex justify-between">
@@ -62,13 +64,19 @@ const img_urls = imgs.map((img) => img.transformed_url);
     </div>
 
     <div id="content" style="visibility: hidden;">
+        <img
+            src=""
+            id="image_overlay"
+            class="rounded-xs fixed h-[80vh] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 transition-opacity duration-500 ease-out opacity-0"
+        />
+
         <div
-            class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
-            id="img_scroll_area"
+            class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all duration-500 ease-out"
+            id="img_scroll_area_one"
         >
             <div
                 id="img_wrapper"
-                class="flex flex-nowrap flex-col justify-center gap-2 max-[500px]:gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit min-[500px]:pt-8 pb-8 max-[500px]:pb-12"
+                class="flex flex-nowrap flex-col justify-center gap-1 max-[500px]:gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit min-[500px]:pt-8 pb-8 max-[500px]:pb-12"
             >
                 {
                     img_urls.map((url) => (
@@ -80,7 +88,30 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] blur-sm scale-[1.05] transition-all duration-600 ease-out"
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] blur-sm scale-[1.05] transition-all duration-500 ease-out"
+                            />
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+
+        <div
+            class="hidden flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
+            id="img_scroll_area_two"
+        >
+            <div
+                id="img_wrapper"
+                class="grid grid-cols-4 w-full max-w-[800px] mx-auto my-4 max-[500px]:grid-cols-1 max-[500px]:my-0 pt-8 pb-8 px-2 h-fit"
+            >
+                {
+                    img_urls.map((url) => (
+                        <div class="overflow-hidden w-fit h-fit">
+                            <img
+                                id="img_static"
+                                src={url}
+                                alt="img"
+                                class="w-full h-auto object-cover transition-all duration-500 ease-out p-[2px] rounded-[3.5px]"
                             />
                         </div>
                     ))
@@ -97,12 +128,49 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
             const images = document.images;
             const imgs = document.querySelectorAll("#img_static");
+            const imgs_first_view = document.querySelectorAll(
+                "#img_scroll_area_one img",
+            );
+            const imgs_second_view = document.querySelectorAll(
+                "#img_scroll_area_two img",
+            );
             const progress = document.getElementById("progress");
             const loader = document.getElementById("loader");
             const content = document.getElementById("content");
+            const view_change_button =
+                document.getElementById("view_change_button");
+            const image_area_one = document.getElementById(
+                "img_scroll_area_one",
+            );
+            const image_area_two = document.getElementById(
+                "img_scroll_area_two",
+            );
+            const image_overlay = document.getElementById(
+                "image_overlay",
+            ) as HTMLImageElement;
 
             let loaded = 0;
+            let view = false;
             const total = images.length;
+
+            const change_view = () => {
+                if (view) {
+                    image_area_one!.classList.replace("hidden", "flex");
+                    image_area_two!.classList.replace("flex", "hidden");
+                }
+
+                if (!view) {
+                    image_area_one!.classList.replace("flex", "hidden");
+                    image_area_two!.classList.replace("hidden", "flex");
+                }
+                view = !view;
+                window.scrollTo({ top: 0, behavior: "instant" });
+                show_first();
+            };
+
+            view_change_button?.addEventListener("click", () => {
+                change_view();
+            });
 
             const checkElements = () => {
                 const middleZoneHeight = window.innerHeight * 0.001;
@@ -110,19 +178,19 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 const middleBottom =
                     window.innerHeight / 2 + middleZoneHeight / 2;
 
-                imgs?.forEach((i) => {
+                imgs_first_view?.forEach((i) => {
                     const rect = i.getBoundingClientRect();
                     const isInCenter =
                         rect.top < middleBottom && rect.bottom > middleTop;
 
                     i.classList.toggle("blur-sm", !isInCenter);
-                    i.classList.toggle("scale-[1.1]", !isInCenter);
+                    i.classList.toggle("scale-[1.05]", !isInCenter);
                 });
             };
 
             const show_first = () => {
                 imgs[0].classList.remove("blur-sm");
-                imgs[0].classList.remove("scale-[1.1]");
+                imgs[0].classList.remove("scale-[1.05]");
             };
 
             const update_perc = () => {
@@ -153,6 +221,32 @@ const img_urls = imgs.map((img) => img.transformed_url);
             };
 
             window.addEventListener("scroll", onScroll);
+
+            imgs_second_view.forEach((img) => {
+                img.addEventListener("mouseover", () => {
+                    image_overlay!.src = img.src;
+                    image_overlay!.classList.replace(
+                        "opacity-0",
+                        "opacity-100",
+                    );
+
+                    imgs.forEach((img) => {
+                        img.classList.add("opacity-20");
+                    });
+                });
+
+                img.addEventListener("mouseleave", () => {
+                    image_overlay!.src = "";
+                    image_overlay!.classList.replace(
+                        "opacity-100",
+                        "opacity-0",
+                    );
+
+                    imgs.forEach((img) => {
+                        img.classList.remove("opacity-20");
+                    });
+                });
+            });
         });
     </script>
 </div>
