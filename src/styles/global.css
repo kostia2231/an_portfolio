@@ -6,6 +6,11 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    overscroll-behavior: none;
+}
+
 html * {
     font-family: "Work Sans", serif;
     font-weight: 400;
