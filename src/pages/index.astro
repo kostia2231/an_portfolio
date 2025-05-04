@@ -234,11 +234,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     image_overlay.src = img.src;
                     image_overlay.classList.replace("opacity-0", "opacity-100");
 
-                    content?.classList.add("opacity-0");
+                    content!.style.opacity = "0.2";
                 });
 
                 img.addEventListener("mouseleave", () => {
                     image_overlay.src = "";
+                    content!.style.opacity = "1";
 
                     image_overlay.classList.replace("opacity-100", "opacity-0");
                 });
