@@ -173,6 +173,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 view = !view;
                 window.scrollTo({ top: 0, behavior: "instant" });
                 show_first();
+                image_overlay.src = "";
             };
 
             view_change_button?.addEventListener("click", () => {
@@ -226,22 +227,18 @@ const img_urls = imgs.map((img) => img.transformed_url);
             const onScroll = () => {
                 requestAnimationFrame(checkElements);
             };
-
             window.addEventListener("scroll", onScroll);
 
             imgs_second_view.forEach((img) => {
                 img.addEventListener("mouseover", () => {
                     image_overlay.src = img.src;
                     image_overlay.classList.replace("opacity-0", "opacity-100");
-
                     content!.style.opacity = "0.2";
                 });
 
                 img.addEventListener("mouseleave", () => {
-                    image_overlay.src = "";
-                    content!.style.opacity = "1";
-
                     image_overlay.classList.replace("opacity-100", "opacity-0");
+                    content!.style.opacity = "1";
                 });
             });
         });
