@@ -63,20 +63,23 @@ const img_urls = imgs.map((img) => img.transformed_url);
         </p>
     </div>
 
-    <div id="content" style="visibility: hidden;">
-        <img
-            src=""
-            id="image_overlay"
-            class="rounded-xs fixed h-[80vh] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 transition-opacity duration-500 ease-out opacity-0"
-        />
-
+    <img
+        src=""
+        id="image_overlay"
+        class="rounded-xs fixed h-[80vh] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 transition-opacity duration-500 ease-out opacity-0"
+    />
+    <div
+        id="content"
+        style="visibility: hidden;"
+        class="transition-all duration-500 ease-out"
+    >
         <div
             class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all duration-500 ease-out"
             id="img_scroll_area_one"
         >
             <div
                 id="img_wrapper"
-                class="flex flex-nowrap flex-col justify-center gap-1 max-[500px]:gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit min-[500px]:pt-8 pb-8 max-[500px]:pb-12"
+                class="flex flex-nowrap flex-col justify-center gap-1 max-[500px]:gap-1 items-center overflow-hidden my-4 max-[500px]:my-0 max-[500px]:grid-cols-1 w-fit min-[500px]:pt-8 pb-8 max-[500px]:pb-12 opacity-100"
             >
                 {
                     img_urls.map((url) => (
@@ -106,7 +109,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
             >
                 {
                     img_urls.map((url) => (
-                        <div class="overflow-hidden w-fit h-fit">
+                        <div
+                            class="overflow-hidden w-fit h-fit"
+                            id="image_wrapp"
+                        >
                             <img
                                 id="img_static"
                                 src={url}
@@ -128,6 +134,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
             const images = document.images;
             const imgs = document.querySelectorAll("#img_static");
+            const img_wrapper = document.getElementById("image_wrapp");
             const imgs_first_view = document.querySelectorAll(
                 "#img_scroll_area_one img",
             );
@@ -227,18 +234,14 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     image_overlay.src = img.src;
                     image_overlay.classList.replace("opacity-0", "opacity-100");
 
-                    imgs.forEach((img) => {
-                        img.classList.add("opacity-10");
-                    });
+                    content?.classList.add("opacity-20");
                 });
 
                 img.addEventListener("mouseleave", () => {
                     image_overlay.src = "";
-                    image_overlay.classList.replace("opacity-100", "opacity-0");
+                    content?.classList.remove("opacity-20");
 
-                    imgs.forEach((img) => {
-                        img.classList.remove("opacity-10");
-                    });
+                    image_overlay.classList.replace("opacity-100", "opacity-0");
                 });
             });
         });
