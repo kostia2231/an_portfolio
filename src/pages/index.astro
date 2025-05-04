@@ -111,7 +111,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="w-full h-auto object-cover transition-all duration-500 ease-out p-[2px] rounded-[3.5px]"
+                                class="w-full h-auto object-cover transition-all duration-500 ease-out p-[2px] rounded-[3.5px] opacity-20"
                             />
                         </div>
                     ))
@@ -224,11 +224,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
             imgs_second_view.forEach((img) => {
                 img.addEventListener("mouseover", () => {
-                    image_overlay!.src = img.src;
-                    image_overlay!.classList.replace(
-                        "opacity-0",
-                        "opacity-100",
-                    );
+                    image_overlay.src = img.src;
+                    image_overlay.classList.replace("opacity-0", "opacity-100");
 
                     imgs.forEach((img) => {
                         img.classList.add("opacity-20");
@@ -236,11 +233,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 });
 
                 img.addEventListener("mouseleave", () => {
-                    image_overlay!.src = "";
-                    image_overlay!.classList.replace(
-                        "opacity-100",
-                        "opacity-0",
-                    );
+                    image_overlay.src = "";
+                    image_overlay.classList.replace("opacity-100", "opacity-0");
 
                     imgs.forEach((img) => {
                         img.classList.remove("opacity-20");
