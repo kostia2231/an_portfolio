@@ -17,6 +17,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Anastasiia Potapova</title>
     {img_urls.map((url) => <link rel="preload" as="image" href={url} />)}
+    <link rel="icon" href="/favicon-16x16.png" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -91,7 +92,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] blur-sm scale-[1.05] transition-all duration-500 ease-out"
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] blur-[4px] scale-[1.02] transition-all duration-500 ease-out will-change-auto"
                             />
                         </div>
                     ))
@@ -134,7 +135,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
             const images = document.images;
             const imgs = document.querySelectorAll("#img_static");
-            const img_wrapper = document.getElementById("image_wrapp");
             const imgs_first_view = document.querySelectorAll(
                 "#img_scroll_area_one img",
             );
@@ -191,14 +191,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     const isInCenter =
                         rect.top < middleBottom && rect.bottom > middleTop;
 
-                    i.classList.toggle("blur-sm", !isInCenter);
-                    i.classList.toggle("scale-[1.05]", !isInCenter);
+                    i.classList.toggle("blur-[4px]", !isInCenter);
                 });
             };
 
             const show_first = () => {
-                imgs[0].classList.remove("blur-sm");
-                imgs[0].classList.remove("scale-[1.05]");
+                imgs[0].classList.remove("blur-[4px]");
             };
 
             const update_perc = () => {
