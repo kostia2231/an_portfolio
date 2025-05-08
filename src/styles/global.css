@@ -20,7 +20,14 @@ body {
 html * {
     font-family: "Work Sans";
     font-weight: 600;
+    letter-spacing: 0.2px;
     text-rendering: optimizeLegibility;
+}
+
+@media (max-width: 500px) {
+    html * {
+        font-weight: 400;
+    }
 }
 
 html {
