@@ -163,8 +163,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
             const toggle_blur = () => {
                 imgs_first_view.forEach((img) => {
-                    img.classList.remove("opacity-0");
-                    img.classList.add("blur-[4px]");
+                    // img.classList.remove("opacity-0");
+                    img.style.opacity = "1";
+                    // img.classList.add("blur-[4px]");
+                    img.style.filter = "blur-4px";
                 });
             };
             // toggle_blur();
