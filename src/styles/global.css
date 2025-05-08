@@ -1,4 +1,10 @@
 @import "tailwindcss";
+@font-face {
+    font-family: "Work Sans";
+    src: url("/font/WorkSans-VariableFont_wght.ttf") format("truetype"); /* или .woff, .woff2 */
+    font-weight: normal;
+    font-style: normal;
+}
 
 *,
 *::before,
@@ -12,8 +18,9 @@ body {
 }
 
 html * {
-    font-family: "Work Sans", serif;
-    font-weight: 400;
+    font-family: "Work Sans";
+    font-weight: 500;
+    letter-spacing: 0.1px;
     text-rendering: optimizeLegibility;
 }
 

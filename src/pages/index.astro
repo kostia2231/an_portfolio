@@ -18,14 +18,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
     <title>Anastasiia Potapova</title>
     {img_urls.map((url) => <link rel="preload" as="image" href={url} />)}
     <link rel="icon" href="/favicon-16x16.png" type="image/png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet"
-    />
 </head>
-<div class="text-[12px] max-[500px]:text-[13px] bg-white">
+<div class="text-[12.2px] max-[500px]:text-[12px] bg-white">
     <div
         class="mt-4 fixed w-screen z-30 mix-blend-difference text-white max-[500px]:hidden handle_from_top"
     >
@@ -41,14 +35,14 @@ const img_urls = imgs.map((img) => img.transformed_url);
         <div class="text-center">©2025</div>
     </div>
     <div
-        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[47vh] mix-blend-difference z-30 max-w-[1440px] pointer-events-none"
+        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[47 vh] mix-blend-difference z-30 max-w-[1440px] pointer-events-none"
         id="middle"
     >
         <div class="flex justify-between">
             <div class="handle_from_left">
                 <p>Anastasiia Potapova</p>
             </div>
-            <div class="flex gap-4 handle_from_right">
+            <div class="flex gap-4 handle_from_right pointer-events-auto">
                 <a href="https://www.instagram.com/ana.sta.sea/">
                     <p class="cursor-pointer hover:opacity-50">Instagram</p>
                 </a>
@@ -92,7 +86,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] scale-[1.02] transition-all duration-500 ease-out will-change-auto opacity-0"
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] scale-[1.02] transition-all duration-500 ease-out will-change-[filter] opacity-0"
                             />
                         </div>
                     ))
@@ -105,15 +99,11 @@ const img_urls = imgs.map((img) => img.transformed_url);
             id="img_scroll_area_two"
         >
             <div
-                id="img_wrapper"
                 class="grid grid-cols-4 w-full max-w-[800px] mx-auto my-4 max-[500px]:grid-cols-1 max-[500px]:my-0 pt-8 pb-8 px-2 h-fit"
             >
                 {
                     img_urls.map((url) => (
-                        <div
-                            class="overflow-hidden w-fit h-fit"
-                            id="image_wrapp"
-                        >
+                        <div class="overflow-hidden w-fit h-fit">
                             <img
                                 id="img_static"
                                 src={url}
@@ -141,7 +131,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
             const imgs_second_view = document.querySelectorAll(
                 "#img_scroll_area_two img",
             ) as NodeListOf<HTMLImageElement>;
-            const img_wrapper = document.getElementById("img_wrapper");
             const progress = document.getElementById("progress");
             const loader = document.getElementById("loader");
             const content = document.getElementById("content");
