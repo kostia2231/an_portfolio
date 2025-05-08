@@ -157,7 +157,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 });
             };
 
-            if (imgs_first_view) toggle_blur();
+            toggle_blur();
 
             const change_view = () => {
                 if (view) {
@@ -177,7 +177,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 change_view();
             });
 
-            const checkElements = () => {
+            const check_elements = () => {
                 const middleZoneHeight = window.innerHeight * 0.001;
                 const middleTop = window.innerHeight / 2 - middleZoneHeight / 2;
                 const middleBottom =
@@ -205,7 +205,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     if (loader) loader.style.display = "none";
                     if (content) content.style.visibility = "visible";
 
-                    checkElements();
+                    check_elements();
                     show_first();
                 }
             };
@@ -220,7 +220,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }
 
             const onScroll = () => {
-                requestAnimationFrame(checkElements);
+                requestAnimationFrame(check_elements);
             };
             window.addEventListener("scroll", onScroll);
 
