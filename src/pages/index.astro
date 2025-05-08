@@ -41,7 +41,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
         <div class="text-center">©2025</div>
     </div>
     <div
-        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[49vh] mix-blend-difference z-30 max-w-[1440px] pointer-events-none"
+        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-white max-[500px]:mt-[45vh] mix-blend-difference z-30 max-w-[1440px] pointer-events-none"
         id="middle"
     >
         <div class="flex justify-between">
@@ -59,7 +59,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
         </div>
     </div>
     <div id="loader" class="flex">
-        <p class="m-auto mt-[50vh] max-[500px]:mt-[49vh]">
+        <p class="m-auto mt-[50vh] max-[500px]:mt-[45vh]">
             <span id="progress">0</span>%
         </p>
     </div>
@@ -168,6 +168,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 });
             };
             toggle_blur();
+
+            window.addEventListener("load", toggle_blur);
 
             const change_view = () => {
                 if (view) {
