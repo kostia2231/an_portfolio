@@ -92,7 +92,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] blur-[4px] scale-[1.02] transition-all duration-500 ease-out will-change-auto"
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] scale-[1.02] transition-all duration-500 ease-out will-change-auto opacity-0"
                             />
                         </div>
                     ))
@@ -137,10 +137,11 @@ const img_urls = imgs.map((img) => img.transformed_url);
             const imgs = document.querySelectorAll("#img_static");
             const imgs_first_view = document.querySelectorAll(
                 "#img_scroll_area_one img",
-            );
+            ) as NodeListOf<HTMLImageElement>;
             const imgs_second_view = document.querySelectorAll(
                 "#img_scroll_area_two img",
-            );
+            ) as NodeListOf<HTMLImageElement>;
+            const img_wrapper = document.getElementById("img_wrapper");
             const progress = document.getElementById("progress");
             const loader = document.getElementById("loader");
             const content = document.getElementById("content");
@@ -159,6 +160,14 @@ const img_urls = imgs.map((img) => img.transformed_url);
             let loaded = 0;
             let view = false;
             const total = images.length;
+
+            const toggle_blur = () => {
+                imgs_first_view.forEach((img) => {
+                    img.classList.remove("opacity-0");
+                    img.classList.add("blur-[4px]");
+                });
+            };
+            toggle_blur();
 
             const change_view = () => {
                 if (view) {
