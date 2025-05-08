@@ -152,22 +152,20 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
             const toggle_blur = () => {
                 imgs_first_view.forEach((img) => {
-                    img.classList.remove("opacity-0");
-                    img.classList.add("blur-[4px]");
+                    img.style.opacity = "1";
+                    img.style.filter = "blur(0px)";
                 });
             };
 
-            toggle_blur();
+            if (imgs_first_view) toggle_blur();
 
             const change_view = () => {
                 if (view) {
-                    image_area_one!.classList.replace("hidden", "flex");
-                    image_area_two!.classList.replace("flex", "hidden");
-                }
-
-                if (!view) {
-                    image_area_one!.classList.replace("flex", "hidden");
-                    image_area_two!.classList.replace("hidden", "flex");
+                    image_area_one!.style.display = "flex";
+                    image_area_two!.style.display = "none";
+                } else {
+                    image_area_one!.style.display = "none";
+                    image_area_two!.style.display = "flex";
                 }
                 view = !view;
                 window.scrollTo({ top: 0, behavior: "instant" });
@@ -190,12 +188,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     const isInCenter =
                         rect.top < middleBottom && rect.bottom > middleTop;
 
-                    i.classList.toggle("blur-[4px]", !isInCenter);
+                    i.style.filter = isInCenter ? "blur(0px)" : "blur(4px)";
                 });
             };
 
             const show_first = () => {
-                imgs[0].classList.remove("blur-[4px]");
+                imgs[0].style.filter = "blur(0px)";
             };
 
             const update_perc = () => {
@@ -229,12 +227,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
             imgs_second_view.forEach((img) => {
                 img.addEventListener("mouseover", () => {
                     image_overlay.src = img.src;
-                    image_overlay.classList.replace("opacity-0", "opacity-100");
+                    image_overlay.style.opacity = "1";
                     content!.style.opacity = "0.2";
                 });
 
                 img.addEventListener("mouseleave", () => {
-                    image_overlay.classList.replace("opacity-100", "opacity-0");
+                    image_overlay.style.opacity = "0";
                     content!.style.opacity = "1";
                 });
             });
