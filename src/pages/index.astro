@@ -167,9 +167,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     img.classList.add("blur-[4px]");
                 });
             };
-            toggle_blur();
+            // toggle_blur();
 
-            window.addEventListener("load", toggle_blur);
+            window.addEventListener("load", () => {
+                toggle_blur();
+                show_first();
+            });
 
             const change_view = () => {
                 if (view) {
