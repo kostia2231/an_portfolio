@@ -81,7 +81,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 {
                     img_urls.map((url) => (
                         <div
-                            class="relative w-fit overflow-hidden rounded-xs"
+                            class="relative w-fit overflow-hidden rounded-xs will-change-[filter]"
                             id="img_group"
                         >
                             <img
@@ -128,12 +128,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
             setTimeout(() => {
                 if (typeof (window as any).Lenis === "function") {
                     const lenis = new (window as any).Lenis({
-                        duration: 1,
+                        duration: 0.9,
                         easing: (t: number) =>
                             Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                         direction: "vertical",
                         smooth: true,
-                        smoothTouch: false,
+                        smoothTouch: true,
                         touchMultiplier: 2,
                     });
 
@@ -162,7 +162,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 rect.top < middleBottom &&
                                 rect.bottom > middleTop;
 
-                            i.style.filter = isInCenter
+                            (i as any).style.filter = isInCenter
                                 ? "blur(0px)"
                                 : "blur(4px)";
                         });
@@ -173,7 +173,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }, 200);
 
             const images = document.images;
-            const imgs = document.querySelectorAll("#img_static");
             const imgs_first_view = document.querySelectorAll(
                 "#img_scroll_area_one img",
             ) as NodeListOf<HTMLImageElement>;
