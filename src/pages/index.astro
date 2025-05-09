@@ -128,7 +128,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             setTimeout(() => {
                 if (typeof (window as any).Lenis === "function") {
                     const lenis = new (window as any).Lenis({
-                        duration: 0.9,
+                        duration: 1,
                         easing: (t: number) =>
                             Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                         direction: "vertical",
