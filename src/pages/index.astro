@@ -92,7 +92,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] scale-[1.02] transition-all duration-500 ease-out will-change-[filter] filter opacity-0"
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] scale-[1.02] transition-all duration-700 ease-in-out will-change-[filter] filter opacity-0"
                             />
                         </div>
                     ))
@@ -130,10 +130,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
             }
 
             setTimeout(() => {
-                if (typeof (window as any).Lenis === "function") {
-                    const lenis = new (window as any).Lenis({
+                if (typeof window.Lenis === "function") {
+                    const lenis = new window.Lenis({
                         duration: 1,
-                        easing: (t: number) =>
+                        easing: (t) =>
                             Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                         direction: "vertical",
                         smooth: true,
@@ -141,9 +141,9 @@ const img_urls = imgs.map((img) => img.transformed_url);
                         touchMultiplier: 2,
                     });
 
-                    (window as any).lenisInstance = lenis;
+                    window.lenisInstance = lenis;
 
-                    function raf(time: number) {
+                    function raf(time) {
                         lenis.raf(time);
                         requestAnimationFrame(raf);
                     }
@@ -166,9 +166,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 rect.top < middleBottom &&
                                 rect.bottom > middleTop;
 
-                            (i as any).style.filter = isInCenter
-                                ? "blur(0px)"
-                                : "blur(4px)";
+                            i.style.opacity = isInCenter ? "1" : "0.2";
                         });
                     };
 
@@ -179,10 +177,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
             const images = document.images;
             const imgs_first_view = document.querySelectorAll(
                 "#img_scroll_area_one img",
-            ) as NodeListOf<HTMLImageElement>;
+            );
             const imgs_second_view = document.querySelectorAll(
                 "#img_scroll_area_two img",
-            ) as NodeListOf<HTMLImageElement>;
+            );
             const progress = document.getElementById("progress");
             const loader = document.getElementById("loader");
             const content = document.getElementById("content");
@@ -194,38 +192,33 @@ const img_urls = imgs.map((img) => img.transformed_url);
             const image_area_two = document.getElementById(
                 "img_scroll_area_two",
             );
-            const image_overlay = document.getElementById(
-                "image_overlay",
-            ) as HTMLImageElement;
+            const image_overlay = document.getElementById("image_overlay");
 
             let loaded = 0;
             let view = false;
             const total = images.length;
 
-            const toggle_blur = () => {
+            const toggle_opacity = () => {
                 imgs_first_view.forEach((img) => {
                     img.style.opacity = "1";
-                    img.style.filter = "blur(0px)";
                 });
             };
 
-            toggle_blur();
+            toggle_opacity();
 
             const change_view = () => {
                 if (view) {
-                    image_area_one!.style.display = "flex";
-                    image_area_two!.style.display = "none";
+                    image_area_one.style.display = "flex";
+                    image_area_two.style.display = "none";
                 } else {
-                    image_area_one!.style.display = "none";
-                    image_area_two!.style.display = "flex";
+                    image_area_one.style.display = "none";
+                    image_area_two.style.display = "flex";
                 }
                 view = !view;
                 window.scrollTo(0, 0);
 
-                if ((window as any).lenisInstance) {
-                    (window as any).lenisInstance.scrollTo(0, {
-                        immediate: true,
-                    });
+                if (window.lenisInstance) {
+                    window.lenisInstance.scrollTo(0, { immediate: true });
                 }
 
                 show_first();
@@ -247,12 +240,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     const isInCenter =
                         rect.top < middleBottom && rect.bottom > middleTop;
 
-                    i.style.filter = isInCenter ? "blur(0px)" : "blur(4px)";
+                    i.style.opacity = isInCenter ? "1" : "0.2";
                 });
             };
 
             const show_first = () => {
-                imgs_first_view[0].style.filter = "blur(0px)";
+                imgs_first_view[0].style.opacity = "1";
             };
 
             const update_perc = () => {
@@ -291,7 +284,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                         const isInCenter =
                             rect.top < middleBottom && rect.bottom > middleTop;
 
-                        i.style.filter = isInCenter ? "blur(0px)" : "blur(4px)";
+                        i.style.opacity = isInCenter ? "1" : "0.2";
                     });
                 });
             };
@@ -302,12 +295,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 img.addEventListener("mouseover", () => {
                     image_overlay.src = img.src;
                     image_overlay.style.opacity = "1";
-                    content!.style.opacity = "0.2";
+                    content.style.opacity = "0.2";
                 });
 
                 img.addEventListener("mouseleave", () => {
                     image_overlay.style.opacity = "0";
-                    content!.style.opacity = "1";
+                    content.style.opacity = "1";
                 });
             });
         });
