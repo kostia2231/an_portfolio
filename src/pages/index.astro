@@ -25,7 +25,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
     <script is:inline src="https://unpkg.com/lenis@1.3.1/dist/lenis.min.js"
     ></script>
 </head>
-<div class="text-[10px] max-[500px]:text-[9px] bg-white">
+<div class="text-[10px] max-[500px]:text-[10px] bg-white">
     <div
         class="mt-4 fixed w-screen z-30 text-black max-[500px]:hidden handle_from_top"
     >
@@ -36,14 +36,14 @@ const img_urls = imgs.map((img) => img.transformed_url);
         </div>
     </div>
     <div
-        class="mb-4 fixed w-screen z-30 text-black bottom-0 handle_from_bottom max-[500px]:text-white"
+        class="mb-4 fixed w-screen z-30 text-black bottom-0 handle_from_bottom max-[500px]:text-white max-[500px]:mix-blend-difference"
     >
         <div class="text-center">ALL RIGHTS RESERVED</div>
 
         <div class="text-center">©2025</div>
     </div>
     <div
-        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-balck max-[500px]:mt-[47vh] z-30 max-w-[1440px] pointer-events-none max-[500px]:text-white"
+        class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen text-balck max-[500px]:mt-[47vh] z-30 max-w-[1440px] pointer-events-none max-[500px]:text-white max-[500px]:mix-blend-difference"
         id="middle"
     >
         <div class="flex justify-between">
@@ -87,14 +87,15 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 {
                     img_urls.map((url) => (
                         <div
-                            class="relative w-fit overflow-hidden rounded-xs will-change-[filter]"
+                            class="relative w-fit overflow-hidden rounded-xs"
                             id="img_group"
                         >
+                            <div class="absolute inset-0 backdrop-blur-md webkit-backdrop-blur-md transition-all duration-700 ease-in-out z-10 will-change-[backdrop-filter]" />
                             <img
                                 id="img_static"
                                 src={url}
                                 alt="img"
-                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] transition-all duration-700 ease-in-out will-change-[filter] filter opacity-0 w-auto"
+                                class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] transition-all duration-700 ease-in-out w-auto relative z-0"
                             />
                         </div>
                     ))
@@ -159,16 +160,28 @@ const img_urls = imgs.map((img) => img.transformed_url);
                         const middleBottom =
                             window.innerHeight / 2 + middleZoneHeight / 2;
 
-                        const imgs_first_view = document.querySelectorAll(
-                            "#img_scroll_area_one img",
+                        const imgGroups = document.querySelectorAll(
+                            "#img_scroll_area_one #img_group",
                         );
-                        imgs_first_view?.forEach((i) => {
-                            const rect = i.getBoundingClientRect();
+
+                        imgGroups.forEach((group) => {
+                            const rect = group.getBoundingClientRect();
                             const isInCenter =
                                 rect.top < middleBottom &&
                                 rect.bottom > middleTop;
 
-                            i.style.opacity = isInCenter ? "1" : "0.2";
+                            const blurDiv = group.querySelector("div");
+                            if (blurDiv) {
+                                if (isInCenter) {
+                                    blurDiv.style.backdropFilter = "blur(0)";
+                                    blurDiv.style.webkitBackdropFilter =
+                                        "blur(0)";
+                                } else {
+                                    blurDiv.style.backdropFilter = "blur(5px)";
+                                    blurDiv.style.webkitBackdropFilter =
+                                        "blur(5px)";
+                                }
+                            }
                         });
                     };
 
@@ -200,13 +213,17 @@ const img_urls = imgs.map((img) => img.transformed_url);
             let view = false;
             const total = images.length;
 
-            const toggle_opacity = () => {
-                imgs_first_view.forEach((img) => {
-                    img.style.opacity = "1";
+            const toggle_blur = () => {
+                const blurDivs = document.querySelectorAll(
+                    "#img_scroll_area_one #img_group div",
+                );
+                blurDivs.forEach((div) => {
+                    div.style.backdropFilter = "blur(5px)";
+                    div.style.webkitBackdropFilter = "blur(5px)";
                 });
             };
 
-            toggle_opacity();
+            toggle_blur();
 
             const change_view = () => {
                 if (view) {
@@ -231,23 +248,14 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 change_view();
             });
 
-            const check_elements = () => {
-                const middleZoneHeight = window.innerHeight * 0.001;
-                const middleTop = window.innerHeight / 2 - middleZoneHeight / 2;
-                const middleBottom =
-                    window.innerHeight / 2 + middleZoneHeight / 2;
-
-                imgs_first_view?.forEach((i) => {
-                    const rect = i.getBoundingClientRect();
-                    const isInCenter =
-                        rect.top < middleBottom && rect.bottom > middleTop;
-
-                    i.style.opacity = isInCenter ? "1" : "0.2";
-                });
-            };
-
             const show_first = () => {
-                imgs_first_view[0].style.opacity = "1";
+                const firstBlurDiv = document.querySelector(
+                    "#img_scroll_area_one #img_group div",
+                );
+                if (firstBlurDiv) {
+                    firstBlurDiv.style.backdropFilter = "blur(0)";
+                    firstBlurDiv.style.webkitBackdropFilter = "blur(0)";
+                }
             };
 
             const update_perc = () => {
@@ -259,7 +267,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     if (loader) loader.style.display = "none";
                     if (content) content.style.visibility = "visible";
 
-                    check_elements();
                     show_first();
                 }
             };
@@ -281,12 +288,26 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     const middleBottom =
                         window.innerHeight / 2 + middleZoneHeight / 2;
 
-                    imgs_first_view?.forEach((i) => {
-                        const rect = i.getBoundingClientRect();
+                    const imgGroups = document.querySelectorAll(
+                        "#img_scroll_area_one #img_group",
+                    );
+
+                    imgGroups.forEach((group) => {
+                        const rect = group.getBoundingClientRect();
                         const isInCenter =
                             rect.top < middleBottom && rect.bottom > middleTop;
 
-                        i.style.opacity = isInCenter ? "1" : "0.2";
+                        const blurDiv = group.querySelector("div");
+                        if (blurDiv) {
+                            if (isInCenter) {
+                                blurDiv.style.backdropFilter = "blur(0)";
+                                blurDiv.style.webkitBackdropFilter = "blur(0)";
+                            } else {
+                                blurDiv.style.backdropFilter = "blur(5px)";
+                                blurDiv.style.webkitBackdropFilter =
+                                    "blur(5px)";
+                            }
+                        }
                     });
                 });
             };
