@@ -24,6 +24,24 @@ const img_urls = imgs.map((img) => img.transformed_url);
     />
     <script is:inline src="https://unpkg.com/lenis@1.3.1/dist/lenis.min.js"
     ></script>
+
+    <!-- Добавляем стили для blur напрямую, без зависимости от JavaScript -->
+    <style is:inline>
+        .blur-overlay {
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .no-blur {
+            backdrop-filter: blur(0) !important;
+            -webkit-backdrop-filter: blur(0) !important;
+        }
+
+        /* Добавляем стили для анимации смены галерей */
+        #img_scroll_area_one,
+        #img_scroll_area_two {
+            transition: opacity 0.5s ease-out;
+        }
+    </style>
 </head>
 <div style="visibility: visible;" id="body">
     <div class="text-[10px] max-[500px]:text-[10px] bg-white h-fit">
@@ -33,7 +51,8 @@ const img_urls = imgs.map((img) => img.transformed_url);
             <div class="text-center">
                 <a
                     id="view_change_button"
-                    class="cursor-pointer hover:opacity-50">VIEW</a
+                    class="cursor-pointer hover:opacity-50 inline-block py-1 px-3 rounded-sm"
+                    >VIEW</a
                 >
             </div>
         </div>
@@ -79,7 +98,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             class="transition-all duration-500 ease-out"
         >
             <div
-                class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:pb-15 max-[500px]:mx-0 w-full transition-all duration-500 ease-out"
+                class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:pb-15 max-[500px]:mx-0 w-full transition-all duration-500 ease-out opacity-100"
                 id="img_scroll_area_one"
             >
                 <div
@@ -94,12 +113,12 @@ const img_urls = imgs.map((img) => img.transformed_url);
                             >
                                 <div
                                     id="blur_overlay"
-                                    data-={index}
-                                    class="overflow-x-clip right-0 w-full h-full absolute inset-0 transition-all duration-700 ease-in-out z-10 will-change-[backdrop-filter]"
+                                    data-index={index}
+                                    class="bg-white/1 blur-overlay overflow-x-clip right-0 w-full h-full absolute inset-0 transition-all duration-700 ease-in-out z-10 will-change-[backdrop-filter]"
                                 />
                                 <img
                                     id="img_static"
-                                    data-={index}
+                                    data-index={index}
                                     src={url}
                                     alt="img"
                                     class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] transition-all duration-700 ease-in-out w-auto relative z-0"
@@ -111,7 +130,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             </div>
 
             <div
-                class="hidden flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all"
+                class="hidden flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all duration-500 ease-out opacity-0"
                 id="img_scroll_area_two"
             >
                 <div
@@ -139,7 +158,23 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     history.scrollRestoration = "manual";
                 }
 
-                setTimeout(() => {
+                // Применяем blur до загрузки всей страницы, без задержки
+                const apply_blur_immediately = () => {
+                    const blur_overlay =
+                        document.querySelectorAll("#blur_overlay");
+                    blur_overlay.forEach((b) => {
+                        // Классы в стилях уже определены в head
+                        if (!b.classList.contains("blur-overlay")) {
+                            b.classList.add("blur-overlay");
+                        }
+                    });
+                };
+
+                // Вызываем сразу, не дожидаясь таймаута
+                apply_blur_immediately();
+
+                // Инициализация Lenis скроллера
+                const initLenis = () => {
                     if (typeof (window as any).Lenis === "function") {
                         const lenis = new (window as any).Lenis({
                             duration: 0.8,
@@ -177,22 +212,13 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                     rect.top < middleBottom &&
                                     rect.bottom > middleTop;
 
-                                const blurDiv = group.querySelector("div");
+                                const blurDiv =
+                                    group.querySelector("#blur_overlay");
                                 if (blurDiv) {
                                     if (isInCenter) {
-                                        blurDiv.style.backdropFilter =
-                                            "blur(0)";
-                                        (
-                                            blurDiv as any
-                                        ).style.webkitBackdropFilter =
-                                            "blur(0)";
+                                        blurDiv.classList.add("no-blur");
                                     } else {
-                                        blurDiv.style.backdropFilter =
-                                            "blur(5px)";
-                                        (
-                                            blurDiv as any
-                                        ).style.webkitBackdropFilter =
-                                            "blur(5px)";
+                                        blurDiv.classList.remove("no-blur");
                                     }
                                 }
                             });
@@ -200,14 +226,10 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
                         lenis.on("scroll", check_elements);
                     }
-                    const blur_overlay =
-                        document.querySelectorAll("#blur_overlay");
+                };
 
-                    blur_overlay.forEach((b) => {
-                        b.classList.add("backdrop-blur-md");
-                        b.classList.add("webkit-backdrop-blur-md");
-                    });
-                }, 200);
+                // Инициализируем скроллер, но с небольшой задержкой
+                setTimeout(initLenis, 200);
 
                 const images = document.images;
                 const imgs_first_view = document.querySelectorAll(
@@ -233,26 +255,36 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 let view = false;
                 const total = images.length;
 
-                const toggle_blur = () => {
-                    const blurDivs = document.querySelectorAll(
-                        "#img_scroll_area_one #img_group div",
-                    );
-                    blurDivs.forEach((div) => {
-                        (div as any).style.backdropFilter = "blur(5px)";
-                        (div as any).style.webkitBackdropFilter = "blur(5px)";
-                    });
-                };
-
-                toggle_blur();
-
                 const change_view = () => {
+                    // Добавляем анимацию при смене галереи
                     if (view) {
-                        image_area_one!.style.display = "flex";
-                        image_area_two!.style.display = "none";
+                        // Плавно скрываем вторую галерею
+                        image_area_two!.style.opacity = "0";
+
+                        setTimeout(() => {
+                            image_area_two!.style.display = "none";
+                            image_area_one!.style.display = "flex";
+
+                            // Небольшая задержка перед показом первой галереи
+                            setTimeout(() => {
+                                image_area_one!.style.opacity = "1";
+                            }, 50);
+                        }, 500); // Ждем завершения анимации исчезновения
                     } else {
-                        image_area_one!.style.display = "none";
-                        image_area_two!.style.display = "flex";
+                        // Плавно скрываем первую галерею
+                        image_area_one!.style.opacity = "0";
+
+                        setTimeout(() => {
+                            image_area_one!.style.display = "none";
+                            image_area_two!.style.display = "flex";
+
+                            // Небольшая задержка перед показом второй галереи
+                            setTimeout(() => {
+                                image_area_two!.style.opacity = "1";
+                            }, 50);
+                        }, 500); // Ждем завершения анимации исчезновения
                     }
+
                     view = !view;
                     window.scrollTo(0, 0);
 
@@ -267,17 +299,21 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 };
 
                 view_change_button?.addEventListener("click", () => {
+                    // Добавляем визуальный эффект нажатия
+                    view_change_button.classList.add("active");
+                    setTimeout(() => {
+                        view_change_button.classList.remove("active");
+                    }, 200);
+
                     change_view();
                 });
 
                 const show_first = () => {
                     const firstBlurDiv = document.querySelector(
-                        "#img_scroll_area_one #img_group div",
+                        "#img_scroll_area_one #img_group #blur_overlay",
                     );
                     if (firstBlurDiv) {
-                        (firstBlurDiv as any).style.backdropFilter = "blur(0)";
-                        (firstBlurDiv as any).style.webkitBackdropFilter =
-                            "blur(0)";
+                        firstBlurDiv.classList.add("no-blur");
                     }
                 };
 
@@ -321,20 +357,13 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                 rect.top < middleBottom &&
                                 rect.bottom > middleTop;
 
-                            const blurDiv = group.querySelector("div");
+                            const blurDiv =
+                                group.querySelector("#blur_overlay");
                             if (blurDiv) {
                                 if (isInCenter) {
-                                    (blurDiv as any).style.backdropFilter =
-                                        "blur(0)";
-                                    (
-                                        blurDiv as any
-                                    ).style.webkitBackdropFilter = "blur(0)";
+                                    blurDiv.classList.add("no-blur");
                                 } else {
-                                    (blurDiv as any).style.backdropFilter =
-                                        "blur(5px)";
-                                    (
-                                        blurDiv as any
-                                    ).style.webkitBackdropFilter = "blur(5px)";
+                                    blurDiv.classList.remove("no-blur");
                                 }
                             }
                         });
