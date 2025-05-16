@@ -89,13 +89,13 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     {
                         img_urls.map((url, index) => (
                             <div
-                                class="relative w-fit overflow-hidden rounded-xs"
+                                class="relative w-fit overflow-hidden rounded-xs "
                                 id="img_group"
                             >
                                 <div
                                     id="blur_overlay"
                                     data-={index}
-                                    class="right-0 w-full h-full absolute inset-0 transition-all duration-700 ease-in-out z-10 will-change-[backdrop-filter]"
+                                    class="overflow-x-clip right-0 w-full h-full absolute inset-0 transition-all duration-700 ease-in-out z-10 will-change-[backdrop-filter]"
                                 />
                                 <img
                                     id="img_static"
