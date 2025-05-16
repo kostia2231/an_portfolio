@@ -138,33 +138,43 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 if ("scrollRestoration" in history) {
                     history.scrollRestoration = "manual";
                 }
-                const body = document.getElementById("body");
+                const shown = localStorage.getItem("shown");
 
-                if (!localStorage.getItem("reloaded")) {
-                    localStorage.setItem("reloaded", "true");
-                    let reloaded = localStorage.getItem("reloaded");
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 50);
-                } else {
-                    localStorage.removeItem("reloaded");
-                }
-
-                let reloadCount = Number(
-                    localStorage.getItem("reloadCount") || "0",
-                );
-
-                // Увеличиваем счётчик и сохраняем его
-                reloadCount += 1;
-                localStorage.setItem("reloadCount", reloadCount);
-
-                // Показываем элемент только если перезагрузка была 2 раза
-                if (reloadCount >= 2) {
+                if (shown === "true") {
                     document.getElementById("body").style.visibility =
                         "visible";
-                    // Если нужно сбросить счётчик после показа:
-                    // localStorage.removeItem('reloadCount');
+                } else {
+                    let reloadCount = Number(
+                        localStorage.getItem("reloadCount") || "0",
+                    );
+
+                    if (!localStorage.getItem("reloaded")) {
+                        localStorage.setItem("reloaded", "true");
+                        localStorage.setItem("reloadCount", reloadCount + 1);
+
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 50);
+                    } else {
+                        reloadCount += 1;
+                        localStorage.setItem("reloadCount", reloadCount);
+                        localStorage.removeItem("reloaded");
+
+                        if (reloadCount >= 2) {
+                            document.getElementById("body").style.visibility =
+                                "visible";
+                            localStorage.setItem("shown", "true");
+                            localStorage.removeItem("reloadCount");
+                        }
+                    }
                 }
+
+                console.log(
+                    "shown:",
+                    shown,
+                    "reloadCount:",
+                    localStorage.getItem("reloadCount"),
+                );
 
                 setTimeout(() => {
                     if (typeof window.Lenis === "function") {
