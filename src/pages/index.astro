@@ -93,10 +93,11 @@ const img_urls = imgs.map((img) => img.transformed_url);
                             <div
                                 id="blur_overlay"
                                 data-={index}
-                                class="w-full h-full absolute inset-0 backdrop-blur-md webkit-backdrop-blur-md transition-all duration-700 ease-in-out z-10 will-change-[backdrop-filter]"
+                                class="right-0 w-full h-full absolute inset-0 transition-all duration-700 ease-in-out z-10 will-change-[backdrop-filter]"
                             />
                             <img
                                 id="img_static"
+                                data-={index}
                                 src={url}
                                 alt="img"
                                 class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] transition-all duration-700 ease-in-out w-auto relative z-0"
@@ -191,14 +192,16 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
                     lenis.on("scroll", check_elements);
                 }
+                const blur_overlay = document.querySelectorAll("#blur_overlay");
+
+                blur_overlay.forEach((b) => {
+                    b.classList.add("backdrop-blur-md");
+                    b.classList.add("webkit-backdrop-blur-md");
+                });
             }, 200);
 
             const images = document.images;
-            const blur_overlay = document.querySelectorAll("#blur_overlay");
 
-            blur_overlay.forEach((b) => {
-                b.classList.add("backdrop-blur-md");
-            });
             const imgs_first_view = document.querySelectorAll(
                 "#img_scroll_area_one img",
             );
