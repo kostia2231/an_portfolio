@@ -1,15 +1,14 @@
 ---
 import "../styles/global.css";
 type Image = {
-    url: string;
     transformed_url: string;
+    transformed_url_blured: string;
 };
-const res = await fetch(
-    "https://subtle-palmier-ae368e.netlify.app/api/data.json",
-);
+const res = await fetch("http://localhost:4321/api/data.json");
 const res_obj = await res.json();
 const imgs: Image[] = res_obj.resources;
 const img_urls = imgs.map((img) => img.transformed_url);
+const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 ---
 
 <head>
@@ -17,34 +16,60 @@ const img_urls = imgs.map((img) => img.transformed_url);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Anastasiia Potapova</title>
     {img_urls.map((url) => <link rel="preload" as="image" href={url} />)}
+    {
+        imgs_urls_blured.map((url) => (
+            <link rel="preload" as="image" href={url} />
+        ))
+    }
     <link rel="icon" href="/favicon-16x16.png" type="image/png" />
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/lenis@1.3.1/dist/lenis.css"
-    />
-    <script is:inline src="https://unpkg.com/lenis@1.3.1/dist/lenis.min.js"
-    ></script>
 
-    <!-- Добавляем стили для blur напрямую, без зависимости от JavaScript -->
     <style is:inline>
-        .blur-overlay {
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-        .no-blur {
-            backdrop-filter: blur(0) !important;
-            -webkit-backdrop-filter: blur(0) !important;
+        .image-container {
+            position: relative;
+            width: fit-content;
+            overflow: hidden;
+            border-radius: 3.5px;
+            will-change: transform;
         }
 
-        /* Добавляем стили для анимации смены галерей */
+        .image-sharp,
+        .image-blurred {
+            max-height: 75vh;
+            width: auto;
+            object-fit: cover;
+            border-radius: 3.5px;
+            will-change: opacity;
+        }
+
+        .image-sharp {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            z-index: 1;
+            transition: opacity 0.4s ease;
+        }
+
+        .image-container.in-center .image-sharp {
+            opacity: 1;
+        }
+
         #img_scroll_area_one,
         #img_scroll_area_two {
-            transition: opacity 0.5s ease-out;
+            transition: opacity 0.4s ease-out;
+        }
+
+        @media (max-width: 500px) {
+            .image-sharp,
+            .image-blurred {
+                height: auto;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <div style="visibility: visible;" id="body">
-    <div class="text-[10px] max-[500px]:text-[10px] bg-white h-fit">
+    <div class="text-[9px] max-[500px]:text-[10px] bg-white h-fit">
         <div
             class="mt-4 fixed w-screen z-30 text-white max-[500px]:hidden handle_from_top mix-blend-difference"
         >
@@ -108,21 +133,19 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     {
                         img_urls.map((url, index) => (
                             <div
-                                class="relative w-fit overflow-hidden rounded-xs "
+                                class="image-container relative w-fit overflow-hidden rounded-xs"
                                 id="img_group"
+                                data-index={index}
                             >
-                                <!-- <div
-                                    id="blur_overlay"
-                                    style={{ backgroundImage: `url(${url})` }}
-                                    data-index={index}
-                                    class=" backdrop-blur-[5px] blur-overlay overflow-x-clip right-0 w-full h-full absolute inset-0 transition-all duration-700 ease-in-out z-10 will-change-[backdrop-filter]"
-                                /> -->
                                 <img
-                                    id="img_static"
-                                    data-index={index}
+                                    src={imgs_urls_blured[index]}
+                                    alt="img blur"
+                                    class="image-blurred max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] transition-all duration-700 ease-in-out w-auto relative"
+                                />
+                                <img
                                     src={url}
-                                    alt="img"
-                                    class="max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] transition-all duration-700 ease-in-out w-auto relative z-0"
+                                    alt="img sharp"
+                                    class="image-sharp max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] transition-all duration-700 ease-in-out w-auto relative"
                                 />
                             </div>
                         ))
@@ -131,7 +154,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
             </div>
 
             <div
-                class="hidden flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all duration-500 ease-out opacity-0"
+                class="hidden flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:mx-0 w-full transition-all opacity-0"
                 id="img_scroll_area_two"
             >
                 <div
@@ -144,7 +167,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                                     id="img_static"
                                     src={url}
                                     alt="img"
-                                    class="w-full h-auto object-cover transition-all duration-500 ease-out p-[2px] rounded-[3.5px]"
+                                    class="w-full h-auto object-cover transition-all p-[2px] rounded-[3.5px]"
                                 />
                             </div>
                         ))
@@ -159,83 +182,21 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     history.scrollRestoration = "manual";
                 }
 
-                // Применяем blur до загрузки всей страницы, без задержки
-                const apply_blur_immediately = () => {
-                    const blur_overlay =
-                        document.querySelectorAll("#blur_overlay");
-                    blur_overlay.forEach((b) => {
-                        // Классы в стилях уже определены в head
-                        if (!b.classList.contains("blur-overlay")) {
-                            b.classList.add("blur-overlay");
-                        }
-                    });
-                };
-
-                // Вызываем сразу, не дожидаясь таймаута
-                apply_blur_immediately();
-
-                // Инициализация Lenis скроллера
-                const initLenis = () => {
-                    if (typeof (window as any).Lenis === "function") {
-                        const lenis = new (window as any).Lenis({
-                            duration: 0.8,
-                            easing: (t: number) =>
-                                Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                            direction: "vertical",
-                            smooth: true,
-                            smoothTouch: true,
-                            touchMultiplier: 2,
-                        });
-
-                        (window as any).lenisInstance = lenis;
-
-                        function raf(time: number) {
-                            lenis.raf(time);
-                            requestAnimationFrame(raf);
-                        }
-
-                        requestAnimationFrame(raf);
-
-                        const check_elements = () => {
-                            const middleZoneHeight = window.innerHeight * 0.001;
-                            const middleTop =
-                                window.innerHeight / 2 - middleZoneHeight / 2;
-                            const middleBottom =
-                                window.innerHeight / 2 + middleZoneHeight / 2;
-
-                            const imgGroups = document.querySelectorAll(
-                                "#img_scroll_area_one #img_group",
-                            );
-
-                            imgGroups.forEach((group) => {
-                                const rect = group.getBoundingClientRect();
-                                const isInCenter =
-                                    rect.top < middleBottom &&
-                                    rect.bottom > middleTop;
-
-                                const blurDiv =
-                                    group.querySelector("#blur_overlay");
-                                if (blurDiv) {
-                                    if (isInCenter) {
-                                        blurDiv.classList.add("no-blur");
-                                    } else {
-                                        blurDiv.classList.remove("no-blur");
-                                    }
-                                }
-                            });
-                        };
-
-                        // lenis.on("scroll", check_elements);
-                    }
-                };
-
-                // Инициализируем скроллер, но с небольшой задержкой
-                setTimeout(initLenis, 200);
+                // const createCenterMarker = () => {
+                //     const marker = document.createElement("div");
+                //     marker.style.position = "fixed";
+                //     marker.style.top = "50%";
+                //     marker.style.left = "0";
+                //     marker.style.width = "100%";
+                //     marker.style.height = "1px";
+                //     marker.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
+                //     marker.style.zIndex = "100";
+                //     marker.style.pointerEvents = "none";
+                //     document.body.appendChild(marker);
+                // };
+                // createCenterMarker();
 
                 const images = document.images;
-                const imgs_first_view = document.querySelectorAll(
-                    "#img_scroll_area_one img",
-                );
                 const imgs_second_view = document.querySelectorAll(
                     "#img_scroll_area_two img",
                 );
@@ -256,51 +217,72 @@ const img_urls = imgs.map((img) => img.transformed_url);
                 let view = false;
                 const total = images.length;
 
+                const checkImagesInCenter = () => {
+                    const middleZoneHeight = window.innerHeight * 0.005;
+                    const middleTop =
+                        window.innerHeight / 2 - middleZoneHeight / 2;
+                    const middleBottom =
+                        window.innerHeight / 2 + middleZoneHeight / 2;
+
+                    const imgContainers =
+                        document.querySelectorAll(".image-container");
+
+                    imgContainers.forEach((container) => {
+                        const rect = container.getBoundingClientRect();
+                        const isInCenter =
+                            rect.top < middleBottom && rect.bottom > middleTop;
+
+                        if (isInCenter) {
+                            container.classList.add("in-center");
+                        } else {
+                            container.classList.remove("in-center");
+                        }
+                    });
+                };
+
+                let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
+                window.addEventListener("resize", () => {
+                    if (resizeTimeout !== null) {
+                        clearTimeout(resizeTimeout);
+                    }
+                    resizeTimeout = setTimeout(checkImagesInCenter, 100);
+                });
+
                 const change_view = () => {
-                    // Добавляем анимацию при смене галереи
                     if (view) {
-                        // Плавно скрываем вторую галерею
                         image_area_two!.style.opacity = "0";
 
                         setTimeout(() => {
                             image_area_two!.style.display = "none";
                             image_area_one!.style.display = "flex";
 
-                            // Небольшая задержка перед показом первой галереи
+                            window.scrollTo({ top: 0, behavior: "instant" });
+
                             setTimeout(() => {
                                 image_area_one!.style.opacity = "1";
+                                checkImagesInCenter();
                             }, 50);
-                        }, 500); // Ждем завершения анимации исчезновения
+                        }, 500);
                     } else {
-                        // Плавно скрываем первую галерею
                         image_area_one!.style.opacity = "0";
 
                         setTimeout(() => {
                             image_area_one!.style.display = "none";
                             image_area_two!.style.display = "flex";
 
-                            // Небольшая задержка перед показом второй галереи
+                            window.scrollTo({ top: 0, behavior: "instant" });
+
                             setTimeout(() => {
                                 image_area_two!.style.opacity = "1";
                             }, 50);
-                        }, 500); // Ждем завершения анимации исчезновения
+                        }, 500);
                     }
 
                     view = !view;
-                    window.scrollTo(0, 0);
-
-                    if ((window as any).lenisInstance) {
-                        (window as any).lenisInstance.scrollTo(0, {
-                            immediate: true,
-                        });
-                    }
-
-                    show_first();
                     (image_overlay as any).src = "";
                 };
 
                 view_change_button?.addEventListener("click", () => {
-                    // Добавляем визуальный эффект нажатия
                     view_change_button.classList.add("active");
                     setTimeout(() => {
                         view_change_button.classList.remove("active");
@@ -308,15 +290,6 @@ const img_urls = imgs.map((img) => img.transformed_url);
 
                     change_view();
                 });
-
-                const show_first = () => {
-                    const firstBlurDiv = document.querySelector(
-                        "#img_scroll_area_one #img_group #blur_overlay",
-                    );
-                    if (firstBlurDiv) {
-                        firstBlurDiv.classList.add("no-blur");
-                    }
-                };
 
                 const update_perc = () => {
                     loaded++;
@@ -327,7 +300,7 @@ const img_urls = imgs.map((img) => img.transformed_url);
                         if (loader) loader.style.display = "none";
                         if (content) content.style.visibility = "visible";
 
-                        show_first();
+                        checkImagesInCenter();
                     }
                 };
 
@@ -340,49 +313,29 @@ const img_urls = imgs.map((img) => img.transformed_url);
                     }
                 }
 
-                const onScroll = () => {
-                    requestAnimationFrame(() => {
-                        const middleZoneHeight = window.innerHeight * 0.001;
-                        const middleTop =
-                            window.innerHeight / 2 - middleZoneHeight / 2;
-                        const middleBottom =
-                            window.innerHeight / 2 + middleZoneHeight / 2;
+                let scrollTimeout: ReturnType<typeof setTimeout> | null;
+                window.addEventListener("scroll", () => {
+                    if (scrollTimeout) return;
 
-                        const imgGroups = document.querySelectorAll(
-                            "#img_scroll_area_one #img_group",
-                        );
-
-                        imgGroups.forEach((group) => {
-                            const rect = group.getBoundingClientRect();
-                            const isInCenter =
-                                rect.top < middleBottom &&
-                                rect.bottom > middleTop;
-
-                            const blurDiv =
-                                group.querySelector("#blur_overlay");
-                            if (blurDiv) {
-                                if (isInCenter) {
-                                    blurDiv.classList.add("no-blur");
-                                } else {
-                                    blurDiv.classList.remove("no-blur");
-                                }
-                            }
-                        });
-                    });
-                };
-
-                // window.addEventListener("scroll", onScroll);
+                    scrollTimeout = setTimeout(() => {
+                        checkImagesInCenter();
+                        scrollTimeout = null;
+                    }, 20);
+                });
 
                 imgs_second_view.forEach((img) => {
                     img.addEventListener("mouseover", () => {
                         (image_overlay as any).src = (img as any).src;
                         (image_overlay as any).style.opacity = "1";
-                        (content as any).style.opacity = "0.2";
+                        (content as any).style.opacity = "0.5";
+                        (content as any).style.filter = "blur(10px)";
                     });
 
                     img.addEventListener("mouseleave", () => {
                         (image_overlay as any).style.opacity = "0";
                         (content as any).style.opacity = "1";
+
+                        (content as any).style.filter = "blur(0px)";
                     });
                 });
             });
