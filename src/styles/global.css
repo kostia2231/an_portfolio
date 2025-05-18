@@ -104,6 +104,14 @@ html::-webkit-scrollbar {
     transition: opacity 0.4s ease-out;
 }
 
+@media (max-width: 500px) {
+    .image-sharp,
+    .image-blurred {
+        height: auto;
+        width: 100%;
+    }
+}
+
 @keyframes from_top {
     from {
         transform: translateY(-100%);
