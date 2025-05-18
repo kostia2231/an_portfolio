@@ -4,7 +4,7 @@ type Image = {
     transformed_url: string;
     transformed_url_blured: string;
 };
-const res = await fetch("http://localhost:4321/api/data.json");
+const res = await fetch("http://anastasiiapotapova.com/api/data.json");
 const res_obj = await res.json();
 const imgs: Image[] = res_obj.resources;
 const img_urls = imgs.map((img) => img.transformed_url);
