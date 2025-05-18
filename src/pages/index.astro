@@ -59,13 +59,13 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
             transition: opacity 0.4s ease-out;
         }
 
-        @media (max-width: 500px) {
+        /* @media (max-width: 500px) {
             .image-sharp,
             .image-blurred {
                 height: auto;
                 width: 100%;
             }
-        }
+        } */
     </style>
 </head>
 <div style="visibility: visible;" id="body">
@@ -85,7 +85,6 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
             class="mb-4 fixed w-screen z-30 text-white bottom-0 handle_from_bottom max-[500px]:text-white mix-blend-difference"
         >
             <div class="text-center">ALL RIGHTS RESERVED</div>
-
             <div class="text-center">©2025</div>
         </div>
         <div
@@ -101,7 +100,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                         <p class="cursor-pointer hover:opacity-50">INSTAGRAM</p>
                     </a>
                     <a href="mailto:potapova.nana@gmail.com">
-                        <p class="cursor-pointer hover:opacity-50">E-MAIL</p>
+                        <p class="cursor-pointer hover:opacity-50">E—MAIL</p>
                     </a>
                 </div>
             </div>
@@ -111,16 +110,16 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 <span id="progress">0</span>%
             </p>
         </div>
-
         <img
             src=""
             id="image_overlay"
             class="rounded-xs fixed h-[80vh] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 transition-opacity duration-500 ease-out opacity-0"
         />
+
         <div
             id="content"
             style="visibility: hidden;"
-            class="transition-all duration-500 ease-out"
+            class="transition-all duration-400 ease-out opacity-0"
         >
             <div
                 class="flex flex-col items-center justify-center max-[500px]:w-[100vw] max-[500px]:p-1 max-[500px]:pb-[60vh] max-[500px]:mx-0 w-full transition-all duration-500 ease-out opacity-100"
@@ -158,7 +157,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 id="img_scroll_area_two"
             >
                 <div
-                    class="grid grid-cols-4 w-full max-w-[800px] mx-auto my-4 max-[500px]:grid-cols-1 max-[500px]:my-0 pt-8 pb-8 px-2 h-fit"
+                    class="grid grid-cols-4 w-full max-w-[800px] mx-auto my-3 max-[500px]:grid-cols-1 max-[500px]:my-0 pt-8 pb-8 px-2 h-fit"
                 >
                     {
                         img_urls.map((url) => (
@@ -298,7 +297,10 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 
                     if (loaded === total) {
                         if (loader) loader.style.display = "none";
-                        if (content) content.style.visibility = "visible";
+                        if (content) {
+                            content.style.visibility = "visible";
+                            content.style.opacity = "1";
+                        }
 
                         checkImagesInCenter();
                     }
