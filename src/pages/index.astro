@@ -43,8 +43,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
         <div
             class="mb-4 fixed w-screen z-30 text-white bottom-0 handle_from_bottom max-[500px]:text-white mix-blend-difference"
         >
-            <div class="text-center">ALL RIGHTS RESERVED</div>
-            <div class="text-center">©2025</div>
+            <div class="text-center">ALL RIGHTS RESERVED (c) 2025</div>
         </div>
         <div
             class="fixed px-4 mt-[50vh] max-[500px]:px-4 w-screen max-[500px]:mt-[47vh] z-30 max-w-[1440px] pointer-events-none max-[500px]:text-white max-[500px]:mix-blend-difference"
@@ -116,16 +115,16 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 id="img_scroll_area_two"
             >
                 <div
-                    class="grid grid-cols-3 w-full max-w-[800px] mx-auto my-3 max-[500px]:grid-cols-1 max-[500px]:my-0 pt-8 pb-8 px-2 h-fit"
+                    class="flex flex-wrap mx-auto my-3 pt-3 pb-12 px-4 w-[70vw]"
                 >
                     {
                         img_urls.map((url) => (
-                            <div class="overflow-hidden w-fit h-fit">
+                            <div class="w-[20%] overflow-hidden h-fit m-auto">
                                 <img
                                     id="img_static"
                                     src={url}
                                     alt="img"
-                                    class="w-full h-auto object-cover transition-all p-[2px]"
+                                    class="w-full h-full object-cover transition-all p-5"
                                 />
                             </div>
                         ))
