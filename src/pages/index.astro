@@ -21,52 +21,11 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
             <link rel="preload" as="image" href={url} />
         ))
     }
+    <script is:inline src="https://unpkg.com/lenis@1.3.1/dist/lenis.min.js"
+    ></script>
     <link rel="icon" href="/favicon-16x16.png" type="image/png" />
 
-    <style is:inline>
-        .image-container {
-            position: relative;
-            width: fit-content;
-            overflow: hidden;
-            border-radius: 3.5px;
-            will-change: transform;
-        }
-
-        .image-sharp,
-        .image-blurred {
-            max-height: 75vh;
-            width: auto;
-            object-fit: cover;
-            border-radius: 3.5px;
-            will-change: opacity;
-        }
-
-        .image-sharp {
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            z-index: 1;
-            transition: opacity 0.4s ease;
-        }
-
-        .image-container.in-center .image-sharp {
-            opacity: 1;
-        }
-
-        #img_scroll_area_one,
-        #img_scroll_area_two {
-            transition: opacity 0.4s ease-out;
-        }
-
-        /* @media (max-width: 500px) {
-            .image-sharp,
-            .image-blurred {
-                height: auto;
-                width: 100%;
-            }
-        } */
-    </style>
+    <style is:inline></style>
 </head>
 <div style="visibility: visible;" id="body">
     <div class="text-[9px] max-[500px]:text-[10px] bg-white h-fit">
@@ -113,7 +72,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
         <img
             src=""
             id="image_overlay"
-            class="rounded-xs fixed h-[80vh] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 transition-opacity duration-500 ease-out opacity-0"
+            class="fixed h-[75vh] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 transition-opacity duration-500 ease-out opacity-0"
         />
 
         <div
@@ -132,19 +91,19 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                     {
                         img_urls.map((url, index) => (
                             <div
-                                class="image-container relative w-fit overflow-hidden rounded-xs"
+                                class="image-container relative w-fit overflow-hidden"
                                 id="img_group"
                                 data-index={index}
                             >
                                 <img
                                     src={imgs_urls_blured[index]}
                                     alt="img blur"
-                                    class="image-blurred max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] transition-all duration-700 ease-in-out w-auto relative"
+                                    class="image-blurred max-[500px]:h-auto max-[500px]:w-full object-cover h-[70vh] transition-all duration-700 ease-in-out w-auto relative"
                                 />
                                 <img
                                     src={url}
                                     alt="img sharp"
-                                    class="image-sharp max-[500px]:h-auto max-[500px]:w-full object-cover rounded-xs h-[75vh] transition-all duration-700 ease-in-out w-auto relative"
+                                    class="image-sharp max-[500px]:h-auto max-[500px]:w-full object-cover h-[70vh] transition-all duration-700 ease-in-out w-auto relative"
                                 />
                             </div>
                         ))
@@ -157,7 +116,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 id="img_scroll_area_two"
             >
                 <div
-                    class="grid grid-cols-4 w-full max-w-[800px] mx-auto my-3 max-[500px]:grid-cols-1 max-[500px]:my-0 pt-8 pb-8 px-2 h-fit"
+                    class="grid grid-cols-3 w-full max-w-[800px] mx-auto my-3 max-[500px]:grid-cols-1 max-[500px]:my-0 pt-8 pb-8 px-2 h-fit"
                 >
                     {
                         img_urls.map((url) => (
@@ -166,7 +125,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                                     id="img_static"
                                     src={url}
                                     alt="img"
-                                    class="w-full h-auto object-cover transition-all p-[2px] rounded-[3.5px]"
+                                    class="w-full h-auto object-cover transition-all p-[2px]"
                                 />
                             </div>
                         ))
@@ -180,20 +139,24 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 if ("scrollRestoration" in history) {
                     history.scrollRestoration = "manual";
                 }
+                if (typeof (window as any).Lenis === "function") {
+                    const lenis = new (window as any).Lenis({
+                        duration: 0.5,
+                        direction: "vertical",
+                        smooth: true,
+                        smoothTouch: false,
+                        touchMultiplier: 2,
+                    });
 
-                // const createCenterMarker = () => {
-                //     const marker = document.createElement("div");
-                //     marker.style.position = "fixed";
-                //     marker.style.top = "50%";
-                //     marker.style.left = "0";
-                //     marker.style.width = "100%";
-                //     marker.style.height = "1px";
-                //     marker.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
-                //     marker.style.zIndex = "100";
-                //     marker.style.pointerEvents = "none";
-                //     document.body.appendChild(marker);
-                // };
-                // createCenterMarker();
+                    (window as any).lenisInstance = lenis;
+
+                    function raf(time: number) {
+                        lenis.raf(time);
+                        requestAnimationFrame(raf);
+                    }
+
+                    requestAnimationFrame(raf);
+                }
 
                 const images = document.images;
                 const imgs_second_view = document.querySelectorAll(
