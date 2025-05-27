@@ -28,12 +28,12 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 
 <div
     id="leftDevider"
-    class="fixed w-[100vw] h-[50vh] bg-white z-20 transition-transform duration-500 [transition-timing-function:var(--bezier)]"
+    class="fixed w-[100vw] h-[50vh] bg-white z-20 transition-transform duration-700 [transition-timing-function:var(--bezier)]"
 >
 </div>
 <div
     id="rightDevider"
-    class="fixed w-[100vw] h-[50vh] bg-white z-20 transition-transform duration-500 bottom-0 [transition-timing-function:var(--bezier)]"
+    class="fixed w-[100vw] h-[50vh] bg-white z-20 transition-transform duration-700 bottom-0 [transition-timing-function:var(--bezier)]"
 >
 </div>
 
@@ -101,7 +101,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                     {
                         img_urls.map((url, index) => (
                             <div
-                                class="origin-bottom transition-transform duration-700 [transition-timing-function:var(--bezierIMG)] scale-[0.8] image-container relative w-fit overflow-hidden"
+                                class="origin-bottom transition-transform duration-1000 [transition-timing-function:var(--bezierIMG)] scale-[0.8] image-container relative w-fit overflow-hidden"
                                 id="img_group"
                                 data-index={index}
                             >
