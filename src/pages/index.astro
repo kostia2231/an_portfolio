@@ -28,12 +28,12 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 
 <div
     id="leftDevider"
-    class="fixed w-[100vw] h-[50lvh] bg-white z-20 translate-y-0 transition-transform duration-700 [transition-timing-function:var(--bezier)]"
+    class="fixed w-[100vw] h-[50lvh] max-[600px]:h-[400px] bg-white z-20 translate-y-0 transition-transform duration-700 max-[600px]:duration-900 [transition-timing-function:var(--bezier)]"
 >
 </div>
 <div
     id="rightDevider"
-    class="fixed w-[100vw] h-[50lvh] bg-white z-20 translate-y-0 transition-transform duration-700 bottom-0 [transition-timing-function:var(--bezier)]"
+    class="fixed w-[100vw] h-[50lvh] max-[600px]:h-[400px] bg-white z-20 translate-y-0 transition-transform duration-700 max-[600px]:duration-900 bottom-0 [transition-timing-function:var(--bezier)]"
 >
 </div>
 
@@ -74,11 +74,11 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 </div>
             </div>
         </div>
-        <div id="loader" class="flex z-30">
+        <!-- <div id="loader" class="flex z-30">
             <p class="m-auto mt-[50vh] max-[500px]:mt-[47vh]">
                 <span id="progress">0</span>%
             </p>
-        </div>
+        </div> -->
         <img
             src=""
             id="image_overlay"
@@ -101,7 +101,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                     {
                         img_urls.map((url, index) => (
                             <div
-                                class="origin-bottom transition-transform duration-1000 [transition-timing-function:var(--bezierIMG)] scale-[0.8] image-container relative w-fit overflow-hidden"
+                                class="origin-bottom transition-transform duration-1000 max-[600px]:duration-1500 [transition-timing-function:var(--bezierIMG)] scale-[0.8] image-container relative w-fit overflow-hidden"
                                 id="img_group"
                                 data-index={index}
                             >
@@ -163,14 +163,14 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 setTimeout(() => {
                     leftDevider?.classList.add("translate-y-[-100%]");
                     rightDevider?.classList.add("translate-y-[100%]");
-                }, 600);
+                }, 900);
 
                 setTimeout(() => {
                     imgGroup?.forEach((img) => {
                         img.classList.remove("scale-[0.8]");
                         img.classList.add("scale-100");
                     });
-                }, 500);
+                }, 800);
             });
         </script>
 
