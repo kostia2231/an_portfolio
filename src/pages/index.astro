@@ -28,12 +28,12 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 
 <div
     id="leftDevider"
-    class="fixed w-[100vw] h-[50vh] bg-white z-20 transition-transform duration-700 [transition-timing-function:var(--bezier)]"
+    class="fixed w-[100vw] h-[50vh] bg-white z-20 translate-y-0 transition-transform duration-700 [transition-timing-function:var(--bezier)]"
 >
 </div>
 <div
     id="rightDevider"
-    class="fixed w-[100vw] h-[50vh] bg-white z-20 transition-transform duration-700 bottom-0 [transition-timing-function:var(--bezier)]"
+    class="fixed w-[100vw] h-[50vh] bg-white z-20 translate-y-0 transition-transform duration-700 bottom-0 [transition-timing-function:var(--bezier)]"
 >
 </div>
 
@@ -161,21 +161,16 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 const imgGroup = document.querySelectorAll("#img_group");
 
                 setTimeout(() => {
-                    if (imgGroup) {
-                        imgGroup.forEach((ig) => {
-                            ig.style.scale = "1";
-                        });
-                    }
-                }, 900);
+                    leftDevider?.classList.add("translate-y-[-100%]");
+                    rightDevider?.classList.add("translate-y-[100%]");
+                }, 600);
 
                 setTimeout(() => {
-                    if (leftDevider) {
-                        leftDevider.style.transform = "translateY(-100%)";
-                    }
-                    if (rightDevider) {
-                        rightDevider.style.transform = "translateY(100%)";
-                    }
-                }, 600);
+                    imgGroup?.forEach((img) => {
+                        img.classList.remove("scale-[0.8]");
+                        img.classList.add("scale-100");
+                    });
+                }, 700);
             });
         </script>
 
