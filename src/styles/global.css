@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @font-face {
-    font-family: "Work Sans";
+    font-family: "MetaOldFrench";
     src: url("/font/WorkSans-Medium.ttf") format("truetype"); /* или .woff, .woff2 */
     font-weight: normal;
     font-style: normal;
@@ -18,9 +18,9 @@ body {
 }
 
 html * {
-    font-family: "Work Sans";
+    font-family: "MetaOldFrench";
     font-weight: 500;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.6px;
     text-rendering: optimizeLegibility;
 }
 

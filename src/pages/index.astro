@@ -24,9 +24,19 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
     <script is:inline src="https://unpkg.com/lenis@1.3.1/dist/lenis.min.js"
     ></script>
     <link rel="icon" href="/favicon-16x16.png" type="image/png" />
-
-    <style is:inline></style>
 </head>
+
+<div
+    id="leftDevider"
+    class="fixed w-[100vw] h-[50vh] bg-white z-20 transition-transform duration-500 [transition-timing-function:var(--bezier)]"
+>
+</div>
+<div
+    id="rightDevider"
+    class="fixed w-[100vw] h-[50vh] bg-white z-20 transition-transform duration-500 bottom-0 [transition-timing-function:var(--bezier)]"
+>
+</div>
+
 <div style="visibility: visible;" id="body">
     <div class="text-[9px] max-[500px]:text-[10px] bg-white h-fit">
         <div
@@ -64,7 +74,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 </div>
             </div>
         </div>
-        <div id="loader" class="flex">
+        <div id="loader" class="flex z-30">
             <p class="m-auto mt-[50vh] max-[500px]:mt-[47vh]">
                 <span id="progress">0</span>%
             </p>
@@ -91,7 +101,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                     {
                         img_urls.map((url, index) => (
                             <div
-                                class="image-container relative w-fit overflow-hidden"
+                                class="origin-bottom transition-transform duration-700 [transition-timing-function:var(--bezierIMG)] scale-[0.8] image-container relative w-fit overflow-hidden"
                                 id="img_group"
                                 data-index={index}
                             >
@@ -133,6 +143,41 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 </div>
             </div>
         </div>
+
+        <script is:inline>
+            document.addEventListener("DOMContentLoaded", () => {
+                document.documentElement.style.setProperty(
+                    "--bezier",
+                    "cubic-bezier(0.91, 0.3, 0.51, 0.24)",
+                );
+
+                document.documentElement.style.setProperty(
+                    "--bezierIMG",
+                    "cubic-bezier(0.27, 0.51, 0.32, 0.99)",
+                );
+
+                const leftDevider = document.getElementById("leftDevider");
+                const rightDevider = document.getElementById("rightDevider");
+                const imgGroup = document.querySelectorAll("#img_group");
+
+                setTimeout(() => {
+                    if (imgGroup) {
+                        imgGroup.forEach((ig) => {
+                            ig.style.scale = "1";
+                        });
+                    }
+                }, 900);
+
+                setTimeout(() => {
+                    if (leftDevider) {
+                        leftDevider.style.transform = "translateY(-100%)";
+                    }
+                    if (rightDevider) {
+                        rightDevider.style.transform = "translateY(100%)";
+                    }
+                }, 600);
+            });
+        </script>
 
         <script>
             document.addEventListener("DOMContentLoaded", () => {
