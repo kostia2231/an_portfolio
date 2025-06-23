@@ -144,7 +144,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
             </div>
         </div>
 
-        <script>
+        <script is:inline>
             document.addEventListener("DOMContentLoaded", () => {
                 document.documentElement.style.setProperty(
                     "--bezier",
@@ -179,8 +179,8 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 if ("scrollRestoration" in history) {
                     history.scrollRestoration = "manual";
                 }
-                if (typeof (window as any).Lenis === "function") {
-                    const lenis = new (window as any).Lenis({
+                if (typeof window.Lenis === "function") {
+                    const lenis = new window.Lenis({
                         duration: 0.5,
                         direction: "vertical",
                         smooth: true,
@@ -188,9 +188,9 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                         touchMultiplier: 2,
                     });
 
-                    (window as any).lenisInstance = lenis;
+                    window.lenisInstance = lenis;
 
-                    function raf(time: number) {
+                    function raf(time) {
                         lenis.raf(time);
                         requestAnimationFrame(raf);
                     }
@@ -242,7 +242,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                     });
                 };
 
-                let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
+                let resizeTimeout = null;
                 window.addEventListener("resize", () => {
                     if (resizeTimeout !== null) {
                         clearTimeout(resizeTimeout);
@@ -252,36 +252,36 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 
                 const change_view = () => {
                     if (view) {
-                        image_area_two!.style.opacity = "0";
+                        image_area_two.style.opacity = "0";
 
                         setTimeout(() => {
-                            image_area_two!.style.display = "none";
-                            image_area_one!.style.display = "flex";
+                            image_area_two.style.display = "none";
+                            image_area_one.style.display = "flex";
 
                             window.scrollTo({ top: 0, behavior: "instant" });
 
                             setTimeout(() => {
-                                image_area_one!.style.opacity = "1";
+                                image_area_one.style.opacity = "1";
                                 checkImagesInCenter();
                             }, 50);
                         }, 500);
                     } else {
-                        image_area_one!.style.opacity = "0";
+                        image_area_one.style.opacity = "0";
 
                         setTimeout(() => {
-                            image_area_one!.style.display = "none";
-                            image_area_two!.style.display = "flex";
+                            image_area_one.style.display = "none";
+                            image_area_two.style.display = "flex";
 
                             window.scrollTo({ top: 0, behavior: "instant" });
 
                             setTimeout(() => {
-                                image_area_two!.style.opacity = "1";
+                                image_area_two.style.opacity = "1";
                             }, 50);
                         }, 500);
                     }
 
                     view = !view;
-                    (image_overlay as any).src = "";
+                    image_overlay.src = "";
                 };
 
                 view_change_button?.addEventListener("click", () => {
@@ -319,7 +319,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                     }
                 }
 
-                let scrollTimeout: ReturnType<typeof setTimeout> | null;
+                let scrollTimeout;
                 window.addEventListener("scroll", () => {
                     if (scrollTimeout) return;
 
@@ -331,17 +331,17 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 
                 imgs_second_view.forEach((img) => {
                     img.addEventListener("mouseover", () => {
-                        (image_overlay as any).src = (img as any).src;
-                        (image_overlay as any).style.opacity = "1";
-                        (content as any).style.opacity = "0.5";
-                        (content as any).style.filter = "blur(10px)";
+                        image_overlay.src = img.src;
+                        image_overlay.style.opacity = "1";
+                        content.style.opacity = "0.5";
+                        content.style.filter = "blur(10px)";
                     });
 
                     img.addEventListener("mouseleave", () => {
-                        (image_overlay as any).style.opacity = "0";
-                        (content as any).style.opacity = "1";
+                        image_overlay.style.opacity = "0";
+                        content.style.opacity = "1";
 
-                        (content as any).style.filter = "blur(0px)";
+                        content.style.filter = "blur(0px)";
                     });
                 });
             });
