@@ -74,6 +74,12 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 </div>
             </div>
         </div>
+        <div
+            id="initial-loader"
+            class="fixed z-[999] inset-0 flex items-center justify-center bg-white text-black text-[9px] transition-opacity duration-500"
+        >
+            <span id="progress">0</span>%
+        </div>
         <!-- <div id="loader" class="flex z-30">
             <p class="m-auto mt-[50vh] max-[500px]:mt-[47vh]">
                 <span id="progress">0</span>%
@@ -296,10 +302,19 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 const update_perc = () => {
                     loaded++;
                     const perc = Math.round((loaded / total) * 100).toString();
-                    if (progress) progress.textContent = perc;
+                    const progressEl = document.getElementById("progress");
+                    if (progressEl) progressEl.textContent = perc;
 
                     if (loaded === total) {
-                        if (loader) loader.style.display = "none";
+                        const initialLoader =
+                            document.getElementById("initial-loader");
+                        if (initialLoader) {
+                            initialLoader.style.opacity = "0";
+                            setTimeout(() => {
+                                initialLoader.remove();
+                            }, 500);
+                        }
+
                         if (content) {
                             content.style.visibility = "visible";
                             content.style.opacity = "1";
