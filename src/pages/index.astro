@@ -161,18 +161,19 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 const imgGroup = document.querySelectorAll("#img_group");
 
                 const triggerOpeningAnimation = () => {
-                    console.log("sd");
+                    console.log("triggerOpeningAnimation");
+
                     setTimeout(() => {
                         leftDevider?.classList.add("translate-y-[-100%]");
                         rightDevider?.classList.add("translate-y-[100%]");
-                    }, 700);
+                    }, 200);
 
                     setTimeout(() => {
                         imgGroup?.forEach((img) => {
                             img.classList.remove("scale-[0.8]");
                             img.classList.add("scale-100");
                         });
-                    }, 650);
+                    }, 500);
                 };
 
                 if ("scrollRestoration" in history) {
