@@ -161,6 +161,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 const imgGroup = document.querySelectorAll("#img_group");
 
                 const triggerOpeningAnimation = () => {
+                    console.log("sd");
                     setTimeout(() => {
                         leftDevider?.classList.add("translate-y-[-100%]");
                         rightDevider?.classList.add("translate-y-[100%]");
