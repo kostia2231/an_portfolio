@@ -76,10 +76,16 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
         </div>
         <div
             id="initial-loader"
-            class="max-[500px]:mt-[-4vh] fixed z-[999] inset-0 flex items-center justify-center bg-white text-black text-[10px] transition-opacity duration-500"
+            class="fixed inset-0 z-[999] flex bg-white text-black text-[10px] transition-opacity duration-700"
         >
-            <span id="progress">0</span>
+            <span
+                id="progress"
+                class="m-auto mt-[50vh] max-[500px]:mt-[47vh] max-[501px]:mt-0"
+            >
+                0%
+            </span>
         </div>
+
         <!-- <div id="loader" class="flex z-30">
             <p class="m-auto mt-[50vh] max-[500px]:mt-[47vh]">
                 <span id="progress">0</span>%
