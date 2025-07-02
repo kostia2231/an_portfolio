@@ -53,7 +53,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
         <div
             class="mb-4 fixed w-screen z-30 text-white bottom-0 handle_from_bottom max-[500px]:text-white mix-blend-difference"
         >
-            <div class="text-center">ALL RIGHTS RESERVED. (C) 2025</div>
+            <div class="text-center">ALL RIGHTS RESERVED<br />2025</div>
             <!-- <div class="text-center">WEBSITE BY: C8.STUDIO</div> -->
         </div>
         <div
@@ -76,9 +76,9 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
         </div>
         <div
             id="initial-loader"
-            class="fixed z-[999] inset-0 flex items-center justify-center bg-white text-black text-[9px] transition-opacity duration-500"
+            class="max-[500px]:mt-[-4vh] fixed z-[999] inset-0 flex items-center justify-center bg-white text-black text-[10px] transition-opacity duration-500"
         >
-            <span id="progress">0</span>%
+            <span id="progress">0</span>
         </div>
         <!-- <div id="loader" class="flex z-30">
             <p class="m-auto mt-[50vh] max-[500px]:mt-[47vh]">
@@ -301,9 +301,12 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 
                 const update_perc = () => {
                     loaded++;
-                    const perc = Math.round((loaded / total) * 100).toString();
+                    const perc = Math.round((loaded / total) * 100);
                     const progressEl = document.getElementById("progress");
-                    if (progressEl) progressEl.textContent = perc;
+
+                    if (progressEl) {
+                        progressEl.textContent = perc === 100 ? "" : `${perc}%`;
+                    }
 
                     if (loaded === total) {
                         const initialLoader =
