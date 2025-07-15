@@ -86,15 +86,10 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
             </span>
         </div>
 
-        <!-- <div id="loader" class="flex z-30">
-            <p class="m-auto mt-[50vh] max-[500px]:mt-[47vh]">
-                <span id="progress">0</span>%
-            </p>
-        </div> -->
         <img
             src=""
             id="image_overlay"
-            class="fixed h-[75vh] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 transition-opacity duration-500 ease-out opacity-0"
+            class="fixed h-[75vh] left-1/2 top-1/2 pointer-events-none z-10 transition-opacity duration-500 ease-out opacity-0"
         />
 
         <div
@@ -120,12 +115,13 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                                 <img
                                     src={imgs_urls_blured[index]}
                                     alt="img blur"
-                                    class="image-blurred max-[500px]:h-auto max-[500px]:w-full object-cover h-[75vh] transition-all duration-700 ease-in-out w-auto relative"
+                                    class="image-blurred max-[500px]:h-auto max-[500px]:w-full object-cover h-[75vh] transition-all duration-500 ease-in-out w-fit relative"
                                 />
                                 <img
                                     src={url}
                                     alt="img sharp"
-                                    class="image-sharp max-[500px]:h-auto max-[500px]:w-full object-cover h-[75vh] transition-all duration-700 ease-in-out w-auto relative"
+                                    loading="lazy"
+                                    class="image-sharp max-[500px]:h-auto max-[500px]:w-full object-cover h-[75vh] transition-all duration-500 ease-in-out w-fit relative"
                                 />
                             </div>
                         ))
@@ -173,31 +169,36 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 const imgGroup = document.querySelectorAll("#img_group");
 
                 const triggerOpeningAnimation = () => {
-                    console.log("triggerOpeningAnimation");
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            leftDevider.style.transform =
+                                "translate3d(0, -100%, 0)";
+                            rightDevider.style.transform =
+                                "translate3d(0, 100%, 0)";
+                        }, 500);
 
-                    setTimeout(() => {
-                        leftDevider?.classList.add("translate-y-[-100%]");
-                        rightDevider?.classList.add("translate-y-[100%]");
-                    }, 500);
-
-                    setTimeout(() => {
-                        imgGroup?.forEach((img) => {
-                            img.classList.remove("scale-[0.8]");
-                            img.classList.add("scale-100");
-                        });
-                    }, 500);
+                        setTimeout(() => {
+                            requestAnimationFrame(() => {
+                                imgGroup?.forEach((img) => {
+                                    img.style.transform = "scale3d(1, 1, 1)";
+                                    img.classList.remove("scale-[0.8]");
+                                    img.classList.add("scale-100");
+                                });
+                            });
+                        }, 500);
+                    });
                 };
 
                 if ("scrollRestoration" in history) {
                     history.scrollRestoration = "manual";
                 }
+
                 if (typeof window.Lenis === "function") {
                     const lenis = new window.Lenis({
-                        duration: 0.5,
+                        duration: 1,
                         direction: "vertical",
                         smooth: true,
                         smoothTouch: false,
-                        touchMultiplier: 2,
                     });
 
                     window.lenisInstance = lenis;
@@ -214,8 +215,6 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 const imgs_second_view = document.querySelectorAll(
                     "#img_scroll_area_two img",
                 );
-                const progress = document.getElementById("progress");
-                const loader = document.getElementById("loader");
                 const content = document.getElementById("content");
                 const view_change_button =
                     document.getElementById("view_change_button");
@@ -228,43 +227,51 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                 const image_overlay = document.getElementById("image_overlay");
 
                 let loaded = 0;
-                let view = false;
                 const total = images.length;
 
+                let rafId = null;
+
                 const checkImagesInCenter = () => {
-                    const middleZoneHeight = window.innerHeight * 0.005;
-                    const middleTop =
-                        window.innerHeight / 2 - middleZoneHeight / 2;
-                    const middleBottom =
-                        window.innerHeight / 2 + middleZoneHeight / 2;
+                    if (rafId) return;
 
-                    const imgContainers =
-                        document.querySelectorAll(".image-container");
+                    rafId = requestAnimationFrame(() => {
+                        const middleZoneHeight = window.innerHeight * 0.005;
+                        const middleTop =
+                            window.innerHeight / 2 - middleZoneHeight / 2;
+                        const middleBottom =
+                            window.innerHeight / 2 + middleZoneHeight / 2;
 
-                    imgContainers.forEach((container) => {
-                        const rect = container.getBoundingClientRect();
-                        const isInCenter =
-                            rect.top < middleBottom && rect.bottom > middleTop;
+                        const imgContainers =
+                            document.querySelectorAll(".image-container");
 
-                        if (isInCenter) {
-                            container.classList.add("in-center");
-                        } else {
-                            container.classList.remove("in-center");
-                        }
+                        imgContainers.forEach((container) => {
+                            const rect = container.getBoundingClientRect();
+                            const isInCenter =
+                                rect.top < middleBottom &&
+                                rect.bottom > middleTop;
+
+                            container.classList.toggle("in-center", isInCenter);
+                        });
+
+                        rafId = null;
                     });
                 };
 
-                let resizeTimeout = null;
+                let resizeRafId = null;
                 window.addEventListener("resize", () => {
-                    if (resizeTimeout !== null) {
-                        clearTimeout(resizeTimeout);
-                    }
-                    resizeTimeout = setTimeout(checkImagesInCenter, 100);
+                    if (resizeRafId) return;
+
+                    resizeRafId = requestAnimationFrame(() => {
+                        checkImagesInCenter();
+                        resizeRafId = null;
+                    });
                 });
 
+                let view = false;
                 const change_view = () => {
                     if (view) {
                         image_area_two.style.opacity = "0";
+                        image_area_two.style.transform = "translate3d(0, 0, 0)";
 
                         setTimeout(() => {
                             image_area_two.style.display = "none";
@@ -274,11 +281,14 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 
                             setTimeout(() => {
                                 image_area_one.style.opacity = "1";
+                                image_area_one.style.transform =
+                                    "translate3d(0, 0, 0)";
                                 checkImagesInCenter();
                             }, 50);
                         }, 500);
                     } else {
                         image_area_one.style.opacity = "0";
+                        image_area_one.style.transform = "translate3d(0, 0, 0)";
 
                         setTimeout(() => {
                             image_area_one.style.display = "none";
@@ -288,6 +298,8 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 
                             setTimeout(() => {
                                 image_area_two.style.opacity = "1";
+                                image_area_two.style.transform =
+                                    "translate3d(0, 0, 0)";
                             }, 50);
                         }, 500);
                     }
@@ -301,19 +313,11 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                     setTimeout(() => {
                         view_change_button.classList.remove("active");
                     }, 200);
-
                     change_view();
                 });
 
-                const update_perc = () => {
+                const update_on_image_load = () => {
                     loaded++;
-                    const perc = Math.round((loaded / total) * 100);
-                    const progressEl = document.getElementById("progress");
-
-                    if (progressEl) {
-                        // progressEl.textContent = perc === 100 ? "" : `${perc}%`;
-                    }
-
                     if (loaded === total) {
                         const initialLoader =
                             document.getElementById("initial-loader");
@@ -336,36 +340,67 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
 
                 for (let i = 0; i < total; i++) {
                     if (images[i].complete) {
-                        update_perc();
+                        update_on_image_load();
                     } else {
-                        images[i].addEventListener("load", update_perc);
-                        images[i].addEventListener("error", update_perc);
+                        images[i].addEventListener(
+                            "load",
+                            update_on_image_load,
+                        );
+                        images[i].addEventListener(
+                            "error",
+                            update_on_image_load,
+                        );
                     }
                 }
 
-                let scrollTimeout;
-                window.addEventListener("scroll", () => {
-                    if (scrollTimeout) return;
+                let scrollRafId = null;
+                window.addEventListener(
+                    "scroll",
+                    () => {
+                        if (scrollRafId) return;
 
-                    scrollTimeout = setTimeout(() => {
-                        checkImagesInCenter();
-                        scrollTimeout = null;
-                    }, 20);
-                });
+                        scrollRafId = requestAnimationFrame(() => {
+                            checkImagesInCenter();
+                            scrollRafId = null;
+                        });
+                    },
+                    { passive: true },
+                );
 
                 imgs_second_view.forEach((img) => {
+                    let hoverRafId = null;
+
                     img.addEventListener("mouseover", () => {
-                        image_overlay.src = img.src;
-                        image_overlay.style.opacity = "1";
-                        content.style.opacity = "0.5";
-                        content.style.filter = "blur(10px)";
+                        if (hoverRafId) return;
+
+                        hoverRafId = requestAnimationFrame(() => {
+                            image_overlay.src = img.src;
+                            image_overlay.style.opacity = "1";
+                            image_overlay.style.transform =
+                                "translate3d(-50%, -50%, 0)";
+
+                            content.style.opacity = "0.5";
+                            content.style.filter = "blur(10px)";
+                            content.style.transform = "translate3d(0, 0, 0)";
+
+                            hoverRafId = null;
+                        });
                     });
 
                     img.addEventListener("mouseleave", () => {
-                        image_overlay.style.opacity = "0";
-                        content.style.opacity = "1";
+                        if (hoverRafId) return;
 
-                        content.style.filter = "blur(0px)";
+                        hoverRafId = requestAnimationFrame(() => {
+                            image_overlay.style.opacity = "0";
+                            image_overlay.style.transform =
+                                "translate3d(-50%, -50%, 0)";
+
+                            content.style.opacity = "1";
+                            content.style.filter = "blur(0px)";
+                            content.style.transform = "translate3d(0, 0, 0)";
+
+                            hoverRafId = null;
+                        });
                     });
                 });
             });
