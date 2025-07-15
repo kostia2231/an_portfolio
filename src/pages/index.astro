@@ -76,13 +76,13 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
         </div>
         <div
             id="initial-loader"
-            class="fixed inset-0 z-[999] flex bg-white text-black text-[10px] transition-opacity duration-700"
+            class="fixed inset-0 z-[999] flex bg-white text-black text-[9px] transition-opacity duration-700"
         >
             <span
                 id="progress"
                 class="m-auto mt-[50vh] max-[500px]:mt-[47vh] max-[501px]:mt-0"
             >
-                0%
+                LOADING
             </span>
         </div>
 
@@ -311,7 +311,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                     const progressEl = document.getElementById("progress");
 
                     if (progressEl) {
-                        progressEl.textContent = perc === 100 ? "" : `${perc}%`;
+                        // progressEl.textContent = perc === 100 ? "" : `${perc}%`;
                     }
 
                     if (loaded === total) {
