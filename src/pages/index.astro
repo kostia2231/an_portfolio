@@ -211,7 +211,7 @@ const imgs_urls_blured = imgs.map((img) => img.transformed_url_blured);
                     requestAnimationFrame(raf);
                 }
 
-                const images = document.images;
+                const images = Array.from(document.images).filter(img => img.id !== 'image_overlay');
                 const imgs_second_view = document.querySelectorAll(
                     "#img_scroll_area_two img",
                 );
